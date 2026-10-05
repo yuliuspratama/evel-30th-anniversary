@@ -1,0 +1,542 @@
+/* =====================================================================
+   style.css — sitesingle-page, elegan & responsif
+   ---------------------------------------------------------------------
+   1. Variabel & reset        5. Timeline
+   2. Dasar & tipografi        6. Galeri
+   3. Utilitas                 7. Ucapan & kutipan
+   4. Hero, nav, tombol       8. Footer
+   ===================================================================== */
+
+/* ---------- 1. Variabel & reset ---------- */
+:root {
+  --wedding:        #7a1f2b;
+  --wedding-dark:   #5c1420;
+  --wedding-soft:   #f6ecec;
+  --gold:           #c39a4e;
+  --ink:            #24191b;
+  --ink-soft:       #5d5153;
+  --paper:          #fdfaf7;
+  --paper-alt:      #f7f1ea;
+  --white:          #ffffff;
+  --border:         #e8ddd4;
+
+  --font-body: "Georgia", "Times New Roman", serif;
+  --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+
+  --wrap: 62rem;
+  --radius: 14px;
+  --shadow: 0 10px 30px rgba(36, 25, 27, 0.08);
+  --transition: 220ms ease;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 4.5rem;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+/* ---------- 2. Dasar & tipografi ---------- */
+h1, h2, h3 {
+  font-family: var(--font-display);
+  line-height: 1.2;
+  margin: 0 0 0.6em;
+  font-weight: 700;
+}
+
+h2.section__title {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  text-align: center;
+  margin-bottom: 0.4em;
+}
+
+p { margin: 0 0 1.1em; }
+
+a { color: var(--wedding); }
+
+:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+.section { padding: clamp(3.5rem, 8vw, 6rem) 0; }
+.section--alt { background: var(--paper-alt); }
+
+.section__lead {
+  text-align: center;
+  color: var(--ink-soft);
+  max-width: 40rem;
+  margin: 0 auto 3rem;
+}
+
+.section__title + .section__lead { margin-top: 0; }
+
+/* ---------- 3. Utilitas ---------- */
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  background: var(--wedding);
+  color: var(--white);
+  padding: 0.75rem 1.25rem;
+  border-radius: 0 0 8px 0;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+/* ---------- 4. Hero, nav, tombol ---------- */
+.hero {
+  position: relative;
+  padding: clamp(4rem, 12vw, 8rem) 1.5rem;
+  text-align: center;
+  color: var(--white);
+  background:
+    radial-gradient(ellipse at 50% 0%, #9c2c3a 0%, transparent 60%),
+    linear-gradient(160deg, var(--wedding-dark) 0%, var(--wedding) 55%, var(--wedding-dark) 100%);
+  overflow: hidden;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 6rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.22), transparent);
+  pointer-events: none;
+}
+
+.hero__inner {
+  max-width: 48rem;
+  margin-inline: auto;
+}
+
+.hero__eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  font-size: 0.75rem;
+  color: var(--gold);
+  margin-bottom: 1.5rem;
+}
+
+.hero__names {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 6vw, 3.4rem);
+  margin-bottom: 0.5rem;
+  line-height: 1.15;
+}
+
+.hero__amp {
+  color: var(--gold);
+  font-style: italic;
+  padding-inline: 0.35em;
+}
+
+.hero__number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1.5rem 0 1rem;
+}
+
+.hero__digit {
+  font-family: var(--font-display);
+  font-size: clamp(4.5rem, 18vw, 9rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--white);
+  text-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+}
+
+.hero__unit {
+  align-self: flex-start;
+  margin-top: 0.6em;
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.hero__sub {
+  font-size: clamp(1.05rem, 2.4vw, 1.3rem);
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 34rem;
+  margin-inline: auto;
+}
+
+.hero__date {
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  margin-bottom: 2rem;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.85rem 2rem;
+  border-radius: 999px;
+  text-decoration: none;
+  font-family: var(--font-display);
+  letter-spacing: 0.08em;
+  border: 2px solid transparent;
+  transition: transform var(--transition), background var(--transition), color var(--transition);
+}
+
+.btn--primary {
+  background: var(--gold);
+  color: var(--wedding-dark);
+  font-weight: 700;
+}
+
+.btn--primary:hover {
+  background: var(--white);
+  transform: translateY(-2px);
+}
+
+/* Nav */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(253, 250, 247, 0.94);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav__list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem 1.5rem;
+  list-style: none;
+  margin: 0 auto;
+  padding: 0.9rem 1.5rem;
+  max-width: var(--wrap);
+}
+
+.nav__list a {
+  display: inline-block;
+  padding: 0.35rem 0.15rem;
+  color: var(--ink);
+  text-decoration: none;
+  font-family: var(--font-display);
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid transparent;
+  transition: color var(--transition), border-color var(--transition);
+}
+
+.nav__list a:hover,
+.nav__list a:focus-visible {
+  color: var(--wedding);
+  border-bottom-color: var(--gold);
+}
+
+/* ---------- 5. Timeline ---------- */
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  counter-reset: step;
+}
+
+.timeline__item {
+  position: relative;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.75rem 1.5rem;
+  box-shadow: var(--shadow);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.timeline__item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(36, 25, 27, 0.13);
+}
+
+.timeline__year {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--wedding);
+  margin-bottom: 0.25rem;
+}
+
+.timeline__title {
+  font-size: 1.15rem;
+  margin-bottom: 0.4rem;
+}
+
+.timeline__text {
+  color: var(--ink-soft);
+  margin: 0;
+  font-size: 0.975rem;
+}
+
+/* ---------- 6. Galeri ---------- */
+.gallery {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+
+.gallery__item {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.gallery__item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(36, 25, 27, 0.13);
+}
+
+.gallery__item img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--wedding-soft);
+}
+
+.gallery__caption {
+  padding: 0.9rem 1.1rem;
+  font-family: var(--font-display);
+  font-size: 0.98rem;
+  color: var(--ink-soft);
+  margin: 0;
+  text-align: center;
+}
+
+/* ---------- 7. Ucapan & kutipan ---------- */
+.prose {
+  max-width: 42rem;
+  margin-inline: auto;
+}
+
+.prose p { color: var(--ink-soft); }
+.prose p:last-child { margin-bottom: 0; }
+
+.prose__salutation {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--wedding) !important;
+  font-style: italic;
+}
+
+.countdown {
+  margin-top: 2.5rem;
+  padding: 1.5rem;
+  text-align: center;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.countdown__label {
+  margin-bottom: 0.5rem;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.countdown__value {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 6vw, 2.75rem);
+  font-weight: 700;
+  color: var(--wedding);
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.countdown__sep { color: var(--gold); padding-inline: 0.3em; }
+
+.countdown__hint {
+  margin: 0.25rem 0 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.wishes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+}
+
+.wish {
+  background: var(--white);
+  border-left: 4px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+.wish__from {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--wedding);
+  margin-bottom: 0.5rem;
+}
+
+.wish__text { margin: 0; color: var(--ink-soft); }
+
+.quote {
+  margin: 0 auto 2.5rem;
+  max-width: 40rem;
+  text-align: center;
+}
+
+.quote:last-of-type { margin-bottom: 0; }
+
+.quote blockquote {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.quote blockquote p {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.quote blockquote p::before { content: "\201C"; }
+.quote blockquote p::after  { content: "\201D"; }
+
+.quote figcaption {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* ---------- 8. Footer ---------- */
+.footer {
+  background: var(--wedding-dark);
+  color: rgba(255, 255, 255, 0.85);
+  text-align: center;
+  padding: 2.5rem 0;
+}
+
+.footer__note { margin-bottom: 0.35rem; }
+
+.footer__credit {
+  margin: 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  background: var(--wedding-soft);
+  color: var(--wedding-dark);
+  padding: 0.1em 0.4em;
+  border-radius: 5px;
+}
+
+/* ---------- 9. Gerak dan motion ---------- */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.reveal {
+  opacity: 0;
+}
+
+.reveal.is-visible {
+  animation: rise 650ms ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  .reveal { opacity: 1; }
+
+  .reveal.is-visible { animation: none; }
+
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .btn:hover,
+  .timeline__item:hover,
+  .gallery__item:hover { transform: none; }
+}
+
+/* ---------- 10. Responsif ---------- */
+@media (max-width: 40rem) {
+  body { font-size: 1rem; }
+
+  .wrap { padding-inline: 1.15rem; }
+
+  .hero { padding-inline: 1.15rem; }
+
+  .hero__number { flex-direction: column; gap: 0.25rem; }
+
+  .hero__unit { margin-top: 0; align-self: center; }
+
+  .nav__list { gap: 0.15rem 1rem; font-size: 0.92rem; }
+}
+
+@media print {
+  .nav, .btn, .skip-link { display: none; }
+
+  body { background: #fff; color: #000; }
+
+  .hero { background: none; color: #000; }
+  .hero__digit, .hero__unit, .hero__eyebrow, .hero__date { color: #000; }
+}

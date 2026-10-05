@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" width="640" height="480" role="img" aria-label="Ilustrasi dua orang duduk melihat cakrawala">
+  <defs>
+    <linearGradient id="sky4" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3c4f78"/>
+      <stop offset="45%" stop-color="#8d7b95"/>
+      <stop offset="75%" stop-color="#e0a06f"/>
+      <stop offset="100%" stop-color="#f4c68c"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="640" height="480" fill="url(#sky4)"/>
+
+  <!-- bintang -->
+  <g fill="#fdfaf7" opacity="0.85">
+    <circle cx="90" cy="70" r="2.5"/>
+    <circle cx="180" cy="46" r="2"/>
+    <circle cx="290" cy="88" r="2.5"/>
+    <circle cx="420" cy="52" r="2"/>
+    <circle cx="520" cy="96" r="2.5"/>
+    <circle cx="600" cy="60" r="2"/>
+    <circle cx="140" cy="130" r="1.8"/>
+    <circle cx="360" cy="140" r="1.8"/>
+    <circle cx="470" cy="126" r="1.6"/>
+  </g>
+
+  <!-- matahari terbenam -->
+  <circle cx="320" cy="300" r="70" fill="#ffd79a" opacity="0.95"/>
+
+  <!-- bukit -->
+  <path d="M0 340 Q160 296 320 336 Q480 374 640 330 L640 480 L0 480 Z" fill="#4a4256" opacity="0.9"/>
+  <path d="M0 386 Q200 350 400 392 Q520 414 640 388 L640 480 L0 480 Z" fill="#332f42"/>
+
+  <!-- dua orang duduk beradu,rón rear view -->
+  <g>
+    <rect x="256" y="300" width="46" height="66" rx="14" fill="#241f33"/>
+    <circle cx="279" cy="288" r="20" fill="#2b2540"/>
+
+    <rect x="330" y="300" width="46" height="66" rx="14" fill="#3a3150"/>
+    <circle cx="353" cy="288" r="20" fill="#423858"/>
+  </g>
+
+  <!-- siluet aster di depan -->
+  <path d="M90 480 Q120 410 118 372" stroke="#26222f" stroke-width="6" fill="none"/>
+  <g fill="#26222f">
+    <ellipse cx="112" cy="366" rx="9" ry="26" transform="rotate(-24 112 366)"/>
+    <ellipse cx="126" cy="378" rx="9" ry="24" transform="rotate(24 126 378)"/>
+  </g>
+
+  <path d="M556 480 Q534 420 538 392" stroke="#26222f" stroke-width="5" fill="none"/>
+  <g fill="#26222f">
+    <ellipse cx="544" cy="388" rx="8" ry="22" transform="rotate(-22 544 388)"/>
+    <ellipse cx="556" cy="398" rx="8" ry="20" transform="rotate(22 556 398)"/>
+  </g>
+</svg>

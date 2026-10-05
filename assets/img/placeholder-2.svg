@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" width="640" height="480" role="img" aria-label="Ilustrasi dua tangan yang berpegangan">
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f6ecec"/>
+      <stop offset="100%" stop-color="#e4cfd0"/>
+    </linearGradient>
+    <linearGradient id="skin2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f2ddcc"/>
+      <stop offset="100%" stop-color="#e0bfa9"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="640" height="480" fill="url(#bg2)"/>
+
+  <!-- lingkaran lembut -->
+  <circle cx="320" cy="240" r="150" fill="#ffffff" opacity="0.45"/>
+
+  <!-- lengan kiri (dari kiri bawah) -->
+  <path d="M90 480 L90 300 Q150 250 230 262 L300 300 L300 360 L230 330 Q170 330 150 360 L150 480 Z"
+        fill="url(#skin2)"/>
+
+  <!-- lengan kanan (dari kanan bawah) -->
+  <path d="M550 480 L550 300 Q490 250 410 262 L340 300 L340 360 L410 330 Q470 330 490 360 L490 480 Z"
+        fill="url(#skin2)"/>
+
+  <!-- jari yang saling berpelukan -->
+  <g stroke="#c99f88" stroke-width="3" fill="none" stroke-linecap="round">
+    <path d="M280 300 Q320 286 360 300"/>
+    <path d="M280 322 Q320 308 360 322"/>
+    <path d="M282 344 Q320 332 358 344"/>
+  </g>
+
+  <!-- cincin -->
+  <circle cx="336" cy="316" r="8" fill="none" stroke="#c39a4e" stroke-width="4"/>
+
+  <!-- bunga kecil melati -->
+  <g fill="#ffffff" opacity="0.9">
+    <circle cx="150" cy="150" r="10"/>
+    <circle cx="164" cy="164" r="10"/>
+    <circle cx="136" cy="164" r="10"/>
+  </g>
+  <g fill="#ffffff" opacity="0.75">
+    <circle cx="500" cy="120" r="9"/>
+    <circle cx="513" cy="133" r="9"/>
+    <circle cx="487" cy="133" r="9"/>
+  </g>
+</svg>

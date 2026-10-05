@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" width="640" height="480" role="img" aria-label="Ilustrasi bunga melati di sore hari">
+  <defs>
+    <linearGradient id="sky3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f3dfc4"/>
+      <stop offset="60%" stop-color="#e7c6a6"/>
+      <stop offset="100%" stop-color="#d9b191"/>
+    </linearGradient>
+    <radialGradient id="sun3" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#fff6e0"/>
+      <stop offset="100%" stop-color="#f0c78c" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="640" height="480" fill="url(#sky3)"/>
+  <circle cx="320" cy="210" r="150" fill="url(#sun3)"/>
+  <circle cx="320" cy="210" r="54" fill="#fff1cf" opacity="0.9"/>
+
+  <!-- daun melati -->
+  <path d="M60 480 Q180 330 320 300 Q460 330 580 480 Z" fill="#7f9f78" opacity="0.9"/>
+  <path d="M110 480 Q210 360 320 330 Q430 360 530 480 Z" fill="#6f9169"/>
+
+  <!-- batang -->
+  <path d="M320 300 Q300 380 318 470" stroke="#5f7f5a" stroke-width="9" fill="none" stroke-linecap="round"/>
+
+  <!-- bunga melati -->
+  <g fill="#fffdf8">
+    <ellipse cx="320" cy="248" rx="26" ry="40"/>
+    <ellipse cx="320" cy="248" rx="26" ry="40" transform="rotate(60 320 248)"/>
+    <ellipse cx="320" cy="248" rx="26" ry="40" transform="rotate(120 320 248)"/>
+    <ellipse cx="320" cy="248" rx="26" ry="40" transform="rotate(180 320 248)"/>
+    <ellipse cx="320" cy="248" rx="26" ry="40" transform="rotate(240 320 248)"/>
+    <ellipse cx="320" cy="248" rx="26" ry="40" transform="rotate(300 320 248)"/>
+  </g>
+  <circle cx="320" cy="248" r="14" fill="#e9c97a"/>
+
+  <!-- kuntum kecil -->
+  <g fill="#fffdf8" opacity="0.85">
+    <ellipse cx="196" cy="286" rx="12" ry="18"/>
+    <ellipse cx="196" cy="286" rx="12" ry="18" transform="rotate(72 196 286)"/>
+    <ellipse cx="196" cy="286" rx="12" ry="18" transform="rotate(144 196 286)"/>
+    <ellipse cx="444" cy="292" rx="11" ry="16"/>
+    <ellipse cx="444" cy="292" rx="11" ry="16" transform="rotate(72 444 292)"/>
+    <ellipse cx="444" cy="292" rx="11" ry="16" transform="rotate(144 444 292)"/>
+  </g>
+</svg>
