@@ -7,6 +7,8 @@ tanpa build step untuk menyajikan situs.
 ## Struktur
 
     content.config.json      SATU-SATUNYA sumber naskah & nilai yang dapat diganti
+    DEPLOY.md                panduan publikasi, rollback, checklist verifikasi
+    .nojekyll                lewati Jekyll; Pages menyajikan branch apa adanya
     tools/build-content.mjs  pembuat index.html dari content.config.json
     tools/lint-text.mjs      gagalkan karakter asing & kebocoran istilah teknis
     index.html              BERKAS HASIL GENERASI — jangan disunting langsung
@@ -14,6 +16,7 @@ tanpa build step untuk menyajikan situs.
     assets/js/config.js     hasil generasi: pengaturan + registry nilai untuk main.js
     assets/js/main.js       substitusi token, hitung mundur, fallback foto, reveal
     assets/img/*.svg        ilustrasi bawaan (SVG asli proyek ini, bebas hak)
+    assets/img/og-cover.png hasil generate dari og-cover.svg untuk kartu berbagi
     tools/static-server.mjs server statis untuk pratinjau & pengujian
     tests/                  rangkaian uji browser + tangkapan layar
 
@@ -87,18 +90,28 @@ lalu gagal dimuat (404), `main.js` mengembalikannya ke ilustrasi.
 
     bash tests/run-tests.sh
 
-Lima rangkaian, semuanya memakai Chromium sungguhan:
+Enam rangkaian, semuanya memakai Chromium sungguhan:
 
 | Rangkaian            | Cakupan                                                                 |
 | -------------------- | ------------------------------------------------------------------------ |
 | `build-content.mjs`  | token tak dikenal / lorem ipsum ditolak; laporan placeholder kosong      |
 | `lint-text.mjs`      | karakter asing (CJK/Cyrillic) & istilah teknis yang bocor ke teks halaman |
+| `tests/og-preview.mjs` | kartu OG tidak terpotong; regenerate `assets/img/og-cover.png`        |
 | `tests/ui.test.mjs`  | struktur, heading, alt, tautan, aset, konsol, keyboard, kontras WCAG AA, 5 viewport, reduced motion, tanpa-JS, registry |
 | `tests/filled.test.mjs` | config berisi nilai nyata: judul, meta, hitung mundur, foto asli vs fallback, ketahanan konfigurasi rusak |
 | `tests/shots.mjs`    | tangkapan layar ke `tests/screenshots/` untuk pemeriksaan visual         |
 
-Butuh `playwright-core` (sudah ada di `tests/node_modules/`) dan Chromium
-di `/usr/bin/chromium`.
+Butuh `playwright-core` (ada di `tests/node_modules/`, tidak di-commit) dan
+Chromium di `/usr/bin/chromium`. Kalau `tests/node_modules/` belum ada:
+
+    cd tests && npm ci
+
+Satu rangkaian **tidak** ada di `run-tests.sh`: `tests/live-check.mjs`. Ia
+menguji URL `github.io/<repo>/` yang sudah daring, untuk membuktikan aset
+memuat di subpath — kondisi yang tidak bisa dibuktikan server lokal. Jalankan
+setelah publish:
+
+    node tests/live-check.mjs
 
 ## Perilaku bila JavaScript mati
 
@@ -116,8 +129,13 @@ animasi muncul saat digulir, dan penanda section aktif.
 
 ## Deploy ke GitHub Pages
 
-Tidak ada build step dan semua path aset relatif, sehingga aman pada URL
-subpath repository. GitHub Pages menyajikan branch `main` apa adanya.
+Situsnya sudah daring:
+
+    https://yuliuspratama.github.io/evel-30th-anniversary/
+
+Tidak ada build step, tidak ada Jekyll, dan semua path aset relatif sehingga
+aman pada URL subpath repository. GitHub Pages menyajikan branch `main` apa
+adanya (berkas `.nojekyll` mematikan pemrosesan Jekyll).
 
 Ringkasnya:
 
@@ -125,8 +143,9 @@ Ringkasnya:
     gh api -X POST repos/<pemilik>/<nama>/pages \
       -f source[branch]=main -f source[path]=/
 
-Panduan lengkap — aktivasi Pages, mengganti nama/tanggal/foto, memperbarui
-konten, rollback, dan checklist verifikasi — ada di **[DEPLOY.md](DEPLOY.md)**.
+Panduan lengkap — aktivasi Pages, memilih branch, mengganti nama/tanggal/foto,
+memperbarui konten, rollback, checklist verifikasi akhir, dan catatan batasan
+domain kustom — ada di **[DEPLOY.md](DEPLOY.md)**.
 
 ## Batasan yang perlu diketahui
 
