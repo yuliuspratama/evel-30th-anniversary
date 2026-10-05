@@ -140,6 +140,16 @@ Untuk memastikan build Pages selesai:
 
 Kembalikan situs ke versi sebelumnya. Pilihannya:
 
+> **Sudah diuji sungguhan di repo ini.** Damage sengaja di-push ke `main`,
+> terkonfirmasi muncul di URL publik, lalu di-revert dengan perintah di bawah —
+> dan damage-nya hilang dari situs publik setelah build Pages berikutnya.
+> Urutan ini hasil uji, bukan tebakan.
+
+Rinciannya: komentar damage sengaja di-push ke `main`, terkonfirmasi muncul
+di URL publik (`grep -c` = 1), lalu `git revert` + `git push`, tunggu build
+Pages, dan konten damage hilang dari situs publik (`grep -c` = 0). Perintah di
+bawah persis yang dipakai.
+
 **Paling aman — revert commit (riwayat tidak ditulis ulang):**
 
     git log --oneline -5                       # cari commit yang bagus
