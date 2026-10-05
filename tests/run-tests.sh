@@ -29,10 +29,10 @@ step() {
   echo "############################################################"
 }
 
-step "1/5  BUILD — index.html dari content.config.json"
+step "1/6  BUILD — index.html dari content.config.json"
 node tools/build-content.mjs || FAILED=1
 
-step "2/5  LINT — karakter asing & istilah teknis"
+step "2/6  LINT — karakter asing & kebocoran istilah teknis"
 node tools/lint-text.mjs || FAILED=1
 
 step "3/6  OG CARD — kartu berbagi (Chromium) + regenerate og-cover.png"
@@ -50,7 +50,7 @@ node tests/shots.mjs || FAILED=1
 echo ""
 echo "============================================================"
 if [ "$FAILED" -eq 0 ]; then
-  echo "SEMUA RANGKAIAN LOROS"
+  echo "SEMUA RANGKAIAN LOLOS"
   echo "Verifikasi tambahan setelah publish: node tests/live-check.mjs"
 else
   echo "ADA YANG GAGAL"
