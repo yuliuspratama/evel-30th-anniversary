@@ -1,0 +1,17 @@
+# Rahasia & kredensial — JANGAN pernah di-commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+id_rsa*
+credentials.json
+secrets/
+tuya_devices.json
+
+# Umum
+node_modules/
+*.log
+dist/
+build/
+.DS_Store
