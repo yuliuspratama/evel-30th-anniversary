@@ -487,7 +487,7 @@ for (const vp of [
       subLong: getComputedStyle(document.querySelector('.hero__sub--long')).display,
       subShort: getComputedStyle(document.querySelector('.hero__sub--short')).display,
       galleryCols: getComputedStyle(document.querySelector('.gallery')).gridTemplateColumns.split(' ').length,
-      timelineCols: getComputedStyle(document.querySelector('.timeline')).gridTemplateColumns.split(' ').length,
+      timelineCols: getComputedStyle(document.querySelector('.timeline')).flexWrap,
       heroVisible: document.querySelector('.hero__digit').getBoundingClientRect().height > 40
     };
   });
@@ -506,6 +506,39 @@ for (const vp of [
   if (vp.width >= 1000) {
     check(`${vp.name}: galeri 3 kolom`, m.galleryCols === 3, `${m.galleryCols} kolom`);
     check(`${vp.name}: subjudul panjang dipakai`, m.subShort === 'none' && m.subLong !== 'none');
+  }
+
+  // Tonggak Perjalanan harus tetap terpusat di semua lebar, termasuk
+  // baris terakhir yang jumlah kartunya tidak penuh.
+  const tl = await page.evaluate(() => {
+    const items = Array.from(document.querySelectorAll('.timeline__item'));
+    if (items.length < 2) return null;
+    const rows = {};
+    items.forEach(el => {
+      const top = Math.round(el.getBoundingClientRect().top);
+      rows[top] = rows[top] || [];
+      rows[top].push(el);
+    });
+    const keys = Object.keys(rows).sort((a, b) => a - b);
+    const wrap = document.querySelector('.timeline').getBoundingClientRect();
+    return keys.map(k => {
+      const row = rows[k];
+      const left = row[0].getBoundingClientRect().left;
+      const last = row[row.length - 1].getBoundingClientRect().right;
+      return {
+        count: row.length,
+        offsetLeft: Math.round(left - wrap.left),
+        offsetRight: Math.round(wrap.right - last)
+      };
+    });
+  });
+  if (tl) {
+    const off = tl.map(r => Math.abs(r.offsetLeft - r.offsetRight));
+    const maxOff = Math.max(...off);
+    check(`${vp.name}: baris tonggak terpusat`,
+      maxOff <= 3,
+      tl.map(r => `${r.count} kartu (selisih ${r.offsetLeft - r.offsetRight}px)`).join(', ') +
+      `; max ${maxOff}px`);
   }
 
   await ctx.close();

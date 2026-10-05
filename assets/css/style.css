@@ -294,17 +294,24 @@ mark.todo {
 }
 
 /* ---------- 5. Timeline ---------- */
+/* Flex + wrap (bukan grid) supaya baris terakhir tetap terpusat ketika
+   jumlah tonggak ganjil — mis. 5 kartu: 3 di atas, 2 terpusat di bawah.
+   Dengan grid, dua kartu terakhir menempel di kiri dan terlihat berat. */
 .timeline {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr));
+  counter-reset: step;
 }
 
 .timeline__item {
   position: relative;
+  flex: 1 1 15.5rem;
+  max-width: 20.5rem;
   background: var(--white);
   border: 1px solid var(--border);
   border-radius: var(--radius);
