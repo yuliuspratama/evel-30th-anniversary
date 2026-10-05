@@ -20,7 +20,14 @@
     "Nama Anak 3": "[Nama Anak 3]",
     "Nama Orang Tua": "[Nama Orang Tua]",
     "Nama Keponakan": "[Nama Keponakan]",
-    "Nama Penyusun": "[Nama Penyusun]"
+    "Nama Penyusun": "[Nama Penyusun]",
+
+    "Deskripsi Foto 1": "[Deskripsi Foto 1]",
+    "Deskripsi Foto 2": "[Deskripsi Foto 2]",
+    "Deskripsi Foto 3": "[Deskripsi Foto 3]",
+    "Keterangan Foto 1": "[Keterangan Foto 1]",
+    "Keterangan Foto 2": "[Keterangan Foto 2]",
+    "Keterangan Foto 3": "[Keterangan Foto 3]"
   },
 
   "settings": {
@@ -95,24 +102,24 @@
         "fallback": "assets/img/placeholder-1.svg",
         "alt": "Ilustrasi dua orang berjalan bersama di taman pada sore hari",
         "caption": "Dua orang, satu arah",
-        "photoAlt": "[Deskripsi Foto 1]",
-        "photoCaption": "[Keterangan Foto 1]"
+        "photoAltToken": "[Deskripsi Foto 1]",
+        "photoCaptionToken": "[Keterangan Foto 1]"
       },
       {
         "photo": "assets/foto-2.jpg",
         "fallback": "assets/img/placeholder-2.svg",
         "alt": "Ilustrasi dua tangan yang berpegangan erat",
         "caption": "Cengkeraman yang tak pernah longgar",
-        "photoAlt": "[Deskripsi Foto 2]",
-        "photoCaption": "[Keterangan Foto 2]"
+        "photoAltToken": "[Deskripsi Foto 2]",
+        "photoCaptionToken": "[Keterangan Foto 2]"
       },
       {
         "photo": "assets/foto-3.jpg",
         "fallback": "assets/img/placeholder-3.svg",
         "alt": "Ilustrasi bunga melati yang mekar di sore hari",
         "caption": "Usia yang panjang",
-        "photoAlt": "[Deskripsi Foto 3]",
-        "photoCaption": "[Keterangan Foto 3]"
+        "photoAltToken": "[Deskripsi Foto 3]",
+        "photoCaptionToken": "[Keterangan Foto 3]"
       }
     ]
   },

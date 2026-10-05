@@ -22,7 +22,13 @@ window.SITE_CONFIG = {
     "Nama Anak 3": "[Nama Anak 3]",
     "Nama Orang Tua": "[Nama Orang Tua]",
     "Nama Keponakan": "[Nama Keponakan]",
-    "Nama Penyusun": "[Nama Penyusun]"
+    "Nama Penyusun": "[Nama Penyusun]",
+    "Deskripsi Foto 1": "[Deskripsi Foto 1]",
+    "Deskripsi Foto 2": "[Deskripsi Foto 2]",
+    "Deskripsi Foto 3": "[Deskripsi Foto 3]",
+    "Keterangan Foto 1": "[Keterangan Foto 1]",
+    "Keterangan Foto 2": "[Keterangan Foto 2]",
+    "Keterangan Foto 3": "[Keterangan Foto 3]"
   },
   meta: {
     title: "30 Tahun Pernikahan — [Nama Pasangan]",

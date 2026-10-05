@@ -87,18 +87,48 @@ function mark(text) {
     (whole) => `<mark class="todo" title="Belum diisi — ganti di content.config.json">${whole}</mark>`);
 }
 
-/* ---------- 3. Galeri: pakai foto bila ada, ilustrasi bila belum ---------- */
+/* ---------- 3. Galeri: pakai foto bila ada, ilustrasi bila belum ----------
+   Aturan alt & caption mengikuti kontrak naskah:
+     - alt WAJIB terisi. Kalau nama fotonya sudah terisi tapi deskripsi
+       belum, tampilkan placeholder terdaftar (menandai pekerjaan tersisa)
+       dan beri peringatan saat build.
+     - caption BOLEH kosong. Kalau belum diisi, paragrafnya dihapus
+       sekalian — jangan sisakan placeholder kosong di halaman.
+   Deskripsi & keterangan foto dibaca dari registry `values` yang sama,
+   jadi bisa diisi terpusat. */
+function resolvePhotoText(text) {
+  const filled = fill(text);
+  return isUnresolved(filled) === null ? filled : null;
+}
+
+const photoWarnings = [];
+
 function buildGallery() {
   const items = (cfg.galeri?.items || []).map((it, i) => {
     const photoExists = it.photo && existsSync(join(ROOT, it.photo));
     const src = photoExists ? it.photo : it.fallback;
-    const alt = photoExists ? it.photoAlt : it.alt;
-    const caption = photoExists ? it.photoCaption : it.caption;
+
+    let alt;
+    if (photoExists) {
+      alt = resolvePhotoText(it.photoAltToken);
+      if (alt === null) {
+        // alt wajib — tampilkan token terdaftar, jangan diamkan.
+        alt = esc(fill(it.photoAltToken)).replace(TOKEN_RE,
+          (whole) => `<mark class="todo" title="Alt text foto wajib diisi — content.config.json">${whole}</mark>`);
+        photoWarnings.push(`${it.photo}: alt belum diisi`);
+      }
+    } else {
+      alt = it.alt; // ilustrasi default: alt menjelaskan ilustrasi itu
+    }
+
+    const captionRaw = photoExists ? it.photoCaptionToken : it.caption;
+    const caption = resolvePhotoText(captionRaw);
+
     return `        <li class="gallery__item">
           <img src="${esc(src)}" alt="${esc(alt)}" width="640" height="480"
                loading="${i === 0 ? 'eager' : 'lazy'}" decoding="async"
                data-fallback="${esc(it.fallback)}" data-photo="${esc(it.photo)}">
-          <p class="gallery__caption">${caption ? mark(caption) : ''}</p>
+          ${caption ? `<p class="gallery__caption">${mark(caption)}</p>` : ''}
         </li>`;
   });
   return items.join('\n');
@@ -338,4 +368,8 @@ console.log('index.html      : ' + out.length + ' byte, ' + (cfg.galeri?.items |
 console.log('placeholder     : ' + usedTokens.size + ' token terdaftar, ' +
   unresolved.length + ' belum diisi' + (unresolved.length ? ' -> ' + unresolved.join(', ') : ''));
 console.log('tanpa daftar    : ' + (undocumented.length || 0));
+if (photoWarnings.length) {
+  console.log('\nPERINGATAN — foto asli terpasang tapi alt belum diisi:');
+  photoWarnings.forEach(w => console.log('  ! ' + w));
+}
 console.log('OK');

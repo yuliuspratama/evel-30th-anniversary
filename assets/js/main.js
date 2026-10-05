@@ -149,13 +149,23 @@
   function initGalleryFallback() {
     var images = document.querySelectorAll(".gallery__item img[data-fallback]");
 
+    var useFallback = function (img) {
+      var fallback = img.getAttribute("data-fallback");
+      if (!fallback) return false;
+      // jangan berputar tanpa henti kalau fallback pun gagal
+      if (img.src.indexOf(fallback) !== -1) return false;
+      img.src = fallback;
+      img.classList.add("gallery__item--fallback");
+      return true;
+    };
+
     Array.prototype.forEach.call(images, function (img) {
-      img.addEventListener("error", function () {
-        var fallback = img.getAttribute("data-fallback");
-        if (!fallback || img.src.indexOf(fallback) !== -1) return;
-        img.src = fallback;
-        img.classList.add("gallery__item--fallback");
-      }, { once: true });
+      img.addEventListener("error", function () { useFallback(img); }, { once: true });
+
+      // Gambar yang dimuat eager bisa sudah GAGAL sebelum listener dipasang
+      // (mis. foto asli belum ada). Periksa kondisi saat ini juga, kalau tidak
+      // placeholder tidak akan pernah muncul.
+      if (img.complete && img.naturalWidth === 0) useFallback(img);
     });
   }
 
