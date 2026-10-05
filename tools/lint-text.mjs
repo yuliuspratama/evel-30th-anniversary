@@ -70,16 +70,25 @@ function walk(dir) {
 
 walk(ROOT);
 
-/*Istilah teknis yang tidak boleh muncul di teks yang dilihat pengunjung */
+/* Istilah teknis yang tidak boleh muncul di TEKS YANG DILIHAT. Atribut
+  title= pada mark.todo memang berisi petunjuk editor — itu disengaja
+  dan tidak pernah tampil sebagai teks halaman, jadi dikecualikan. */
 const PAGE_COPY = ['index.html'];
 const BANNED_IN_PAGE = ['lorem ipsum', 'config.js', 'content.config.json', 'index.html',
   'undefined', 'NaN', '[object Object]'];
+
 for (const f of PAGE_COPY) {
-  const text = readFileSync(join(ROOT, f), 'utf8');
-  const body = text.split('<body')[1] || '';
+  const full = readFileSync(join(ROOT, f), 'utf8');
+  // buang <head>, komentar, dan seluruh nilai atribut title=
+  const body = (full.split('<body')[1] || '')
+    .replace(/<!--[\s\S]*?-->/g, '')       // komentar
+    .replace(/\stitle="[^"]*"/g, '')        // tooltip (petunjuk editor)
+    .replace(/\sclass="[^"]*"/g, '')        // nama kelas
+    .replace(/\sdata-[\w-]+="[^"]*"/g, '') // atribut data
+    .replace(/<[^>]+>/g, ' ');              // tag -> spasi (sisakan teks)
   for (const word of BANNED_IN_PAGE) {
     if (body.includes(word)) {
-      problems.push(`${f}: istilah "${word}" bocor ke badan halaman`);
+      problems.push(`${f}: istilah "${word}" bocor ke teks halaman`);
     }
   }
 }

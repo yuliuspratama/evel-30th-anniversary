@@ -3,10 +3,11 @@
 # run-tests.sh — jalankan seluruh rangkaian uji proyek ini
 # ---------------------------------------------------------------------
 #   1. build  : bangun index.html dari content.config.json
-#   2. ui     : struktur, tautan, konsol, keyboard, kontras,
+#   2. lint   : karakter asing & kebocoran istilah teknis
+#   3. ui     : struktur, tautan, konsol, keyboard, kontras,
 #               responsif, reduced motion, tanpa-JS, registry
-#   3. filled : config berisi nilai nyata end-to-end
-#   4. shots  : tangkapan layar untuk pemeriksaan visual
+#   4. filled : config berisi nilai nyata end-to-end
+#   5. shots  : tangkapan layar untuk pemeriksaan visual
 #
 # Keluar bukan 0 bila ada yang gagal.
 # =====================================================================
@@ -23,16 +24,19 @@ step() {
   echo "############################################################"
 }
 
-step "1/4  BUILD — index.html dari content.config.json"
+step "1/5  BUILD — index.html dari content.config.json"
 node tools/build-content.mjs || FAILED=1
 
-step "2/4  UI TEST — browser sungguhan"
+step "2/5  LINT — karakter asing & istilah teknis"
+node tools/lint-text.mjs || FAILED=1
+
+step "3/5  UI TEST — browser sungguhan"
 node tests/ui.test.mjs || FAILED=1
 
-step "3/4  FILLED TEST — konfigurasi terpusat end-to-end"
+step "4/5  FILLED TEST — konfigurasi terpusat end-to-end"
 node tests/filled.test.mjs || FAILED=1
 
-step "4/4  SCREENSHOTS — bukti visual"
+step "5/5  SCREENSHOTS — bukti visual"
 node tests/shots.mjs || FAILED=1
 
 echo ""

@@ -8,6 +8,7 @@ tanpa build step untuk menyajikan situs.
 
     content.config.json      SATU-SATUNYA sumber naskah & nilai yang dapat diganti
     tools/build-content.mjs  pembuat index.html dari content.config.json
+    tools/lint-text.mjs      gagalkan karakter asing & kebocoran istilah teknis
     index.html              BERKAS HASIL GENERASI — jangan disunting langsung
     assets/css/style.css    gaya, responsif, hormat prefers-reduced-motion
     assets/js/config.js     hasil generasi: pengaturan + registry nilai untuk main.js
@@ -86,11 +87,12 @@ lalu gagal dimuat (404), `main.js` mengembalikannya ke ilustrasi.
 
     bash tests/run-tests.sh
 
-Empat rangkaian, semuanya memakai Chromium sungguhan:
+Lima rangkaian, semuanya memakai Chromium sungguhan:
 
 | Rangkaian            | Cakupan                                                                 |
 | -------------------- | ------------------------------------------------------------------------ |
 | `build-content.mjs`  | token tak dikenal / lorem ipsum ditolak; laporan placeholder kosong      |
+| `lint-text.mjs`      | karakter asing (CJK/Cyrillic) & istilah teknis yang bocor ke teks halaman |
 | `tests/ui.test.mjs`  | struktur, heading, alt, tautan, aset, konsol, keyboard, kontras WCAG AA, 5 viewport, reduced motion, tanpa-JS, registry |
 | `tests/filled.test.mjs` | config berisi nilai nyata: judul, meta, hitung mundur, foto asli vs fallback, ketahanan konfigurasi rusak |
 | `tests/shots.mjs`    | tangkapan layar ke `tests/screenshots/` untuk pemeriksaan visual         |

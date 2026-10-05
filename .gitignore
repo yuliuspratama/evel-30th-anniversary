@@ -15,3 +15,7 @@ node_modules/
 dist/
 build/
 .DS_Store
+
+# Dependensi uji & hasil uji
+tests/node_modules/
+tests/screenshots/

@@ -30,7 +30,7 @@
   <path d="M0 340 Q160 296 320 336 Q480 374 640 330 L640 480 L0 480 Z" fill="#4a4256" opacity="0.9"/>
   <path d="M0 386 Q200 350 400 392 Q520 414 640 388 L640 480 L0 480 Z" fill="#332f42"/>
 
-  <!-- dua orang duduk beradu,rón rear view -->
+  <!-- dua orang duduk beradu, tampak belakang -->
   <g>
     <rect x="256" y="300" width="46" height="66" rx="14" fill="#241f33"/>
     <circle cx="279" cy="288" r="20" fill="#2b2540"/>
