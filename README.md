@@ -117,7 +117,16 @@ animasi muncul saat digulir, dan penanda section aktif.
 ## Deploy ke GitHub Pages
 
 Tidak ada build step dan semua path aset relatif, sehingga aman pada URL
-subpath repository. Detail langkah publikasi ada di kartu tersendiri.
+subpath repository. GitHub Pages menyajikan branch `main` apa adanya.
+
+Ringkasnya:
+
+    gh repo create <nama> --public --source=. --remote=origin --push
+    gh api -X POST repos/<pemilik>/<nama>/pages \
+      -f source[branch]=main -f source[path]=/
+
+Panduan lengkap — aktivasi Pages, mengganti nama/tanggal/foto, memperbarui
+konten, rollback, dan checklist verifikasi — ada di **[DEPLOY.md](DEPLOY.md)**.
 
 ## Batasan yang perlu diketahui
 
