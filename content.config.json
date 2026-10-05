@@ -95,7 +95,7 @@
   "galeri": {
     "id": "galeri",
     "heading": "Galeri",
-    "lead": "Tiga bingkai kenangan kami. Ganti foto asli kapan saja lewat content.config.json.",
+    "lead": "Tiga bingkai kenangan yang kami simpan dari tiga puluh tahun bersama.",
     "items": [
       {
         "photo": "assets/foto-1.jpg",

@@ -296,7 +296,11 @@ mark.todo {
 /* ---------- 5. Timeline ---------- */
 /* Flex + wrap (bukan grid) supaya baris terakhir tetap terpusat ketika
    jumlah tonggak ganjil — mis. 5 kartu: 3 di atas, 2 terpusat di bawah.
-   Dengan grid, dua kartu terakhir menempel di kiri dan terlihat berat. */
+   Dengan grid, dua kartu terakhir menempel di kiri dan terlihat berat.
+
+   flex-grow sengaja 0: basis-nya sudah persis lebar "tiga per baris",
+   sehingga baris terakhir yang hanya berisi 2 kartu TIDAK melebar dan
+   kartunya sama besar dengan baris di atasnya. */
 .timeline {
   list-style: none;
   margin: 0;
@@ -305,13 +309,11 @@ mark.todo {
   flex-wrap: wrap;
   justify-content: center;
   gap: 1.5rem;
-  counter-reset: step;
 }
 
 .timeline__item {
   position: relative;
-  flex: 1 1 15.5rem;
-  max-width: 20.5rem;
+  flex: 0 1 calc((100% - 3rem) / 3);
   background: var(--white);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -545,8 +547,18 @@ mark.todo {
 }
 
 /* ---------- 10. Responsif ---------- */
+/* Tonggak: 3 kolom di lebar, 2 di tablet, 1 di ponsel. Basis flex
+   mengikuti jumlah kolom agar kartu selalu sama besar per baris. */
+@media (max-width: 62rem) {
+  .timeline__item { flex-basis: calc((100% - 1.5rem) / 2); }
+}
+
 @media (max-width: 40rem) {
   body { font-size: 1rem; }
+
+  /* Satu kartu per baris di ponsel: dua kolom di 320px hanya menyisakan
+     ~130px per kartu, terlalu sempit untuk paragraf yang enak dibaca. */
+  .timeline__item { flex-basis: 100%; }
 
   .wrap { padding-inline: 1.15rem; }
   .hero { padding-inline: 1.15rem; }

@@ -525,10 +525,13 @@ for (const vp of [
       const row = rows[k];
       const left = row[0].getBoundingClientRect().left;
       const last = row[row.length - 1].getBoundingClientRect().right;
+      const widths = row.map(el => Math.round(el.getBoundingClientRect().width));
       return {
         count: row.length,
         offsetLeft: Math.round(left - wrap.left),
-        offsetRight: Math.round(wrap.right - last)
+        offsetRight: Math.round(wrap.right - last),
+        widths,
+        maxWidth: Math.max(...widths) - Math.min(...widths)
       };
     });
   });
@@ -539,6 +542,14 @@ for (const vp of [
       maxOff <= 3,
       tl.map(r => `${r.count} kartu (selisih ${r.offsetLeft - r.offsetRight}px)`).join(', ') +
       `; max ${maxOff}px`);
+
+    // Lebar kartu harus sama di semua baris — kartu baris terakhir tidak
+    // boleh melebar hanya karena jumlahnya kurang.
+    const widths = tl.flatMap(r => r.widths);
+    const spread = Math.max(...widths) - Math.min(...widths);
+    check(`${vp.name}: lebar kartu tonggak seragam`,
+      spread <= 2,
+      `rentang ${spread}px (${Math.min(...widths)}-${Math.max(...widths)}px)`);
   }
 
   await ctx.close();
@@ -698,6 +709,16 @@ group('I. Registry placeholder');
   });
   check('setiap placeholder yang tampil diberi penanda visual', marked.length > 0,
     `${marked.length} penanda, contoh "${marked[0]?.t}" latar ${marked[0]?.bg}`);
+
+  // Istilah teknis tidak boleh bocor ke halaman yang dilihat pengunjung.
+  const jargon = await page.evaluate(() => {
+    const text = document.body.innerText;
+    const words = ['config.js', 'content.config.json', 'index.html', 'JSON', 'null',
+                   'undefined', 'main.js', 'lorem', 'TODO', 'FIXME'];
+    return words.filter(w => text.includes(w));
+  });
+  check('tidak ada istilah teknis di teks halaman', jargon.length === 0,
+    jargon.join(', ') || 'teks bersih');
 
   // Placeholder yang HANYA jadi kartu (kartu ucapan keluarga) boleh dibuang
   // bila opsional & kosong. Placeholder inline di dalam kalimat (mis.
