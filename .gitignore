@@ -16,6 +16,5 @@ dist/
 build/
 .DS_Store
 
-# Dependensi uji & hasil uji
+# Dependensi uji (regenerable dari package.json)
 tests/node_modules/
-tests/screenshots/
