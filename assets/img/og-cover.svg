@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Kartu berbagi: tiga puluh tahun pernikahan">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0%" stop-color="#4a0f19"/>
+      <stop offset="55%" stop-color="#6f1a26"/>
+      <stop offset="100%" stop-color="#4a0f19"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.18" r="0.6">
+      <stop offset="0%" stop-color="#7a1f2b" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#7a1f2b" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <g fill="none" stroke="#e8cd94" stroke-width="2" opacity="0.55">
+    <circle cx="600" cy="150" r="54"/>
+    <circle cx="600" cy="150" r="76" opacity="0.5"/>
+  </g>
+
+  <text x="600" y="286" text-anchor="middle" fill="#e8cd94"
+        font-family="system-ui, 'Segoe UI', Roboto, sans-serif"
+        font-size="26" letter-spacing="11">PERINGATAN TIGA PULUH TAHUN</text>
+
+  <text x="600" y="432" text-anchor="middle" fill="#ffffff"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="190" font-weight="700">30</text>
+
+  <text x="600" y="502" text-anchor="middle" fill="#e8cd94"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="40">Tahun Bersama</text>
+
+  <path d="M470 548 h260" stroke="#e8cd94" stroke-width="2" opacity="0.6"/>
+</svg>

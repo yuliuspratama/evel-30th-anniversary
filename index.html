@@ -1,187 +1,196 @@
 <!DOCTYPE html>
-<html lang="id">
+<!--
+  BERKAS HASIL GENERASI — jangan disunting langsung.
+  Sumber tunggal: content.config.json
+  Bangun ulang:  node tools/build-content.mjs
+-->
+<html lang="id-ID">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Selamat Ulang Tahun Pernikahan ke-30</title>
-<meta name="description" content="Situs ucapan ulang tahun pernikahan ke-30: tiga puluh tahun penuh kenangan, cerita, dan doa dari keluarga.">
-<meta name="theme-color" content="#7a1f2b">
+<title>30 Tahun Pernikahan — [Nama Pasangan]</title>
+<meta name="description" content="Merayakan 30 tahun [Nama Pasangan] bersama sejak [Tanggal Pernikahan] — cerita, ucapan keluarga, dan kenangan yang kami kumpulkan untuk mereka.">
+<meta name="theme-color" content="#6f1a26">
+<meta name="author" content="[Nama Penyusun]">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Selamat Ulang Tahun Pernikahan ke-30">
-<meta property="og:description" content="Tiga puluh tahun, satu cerita yang terus berjalan.">
+<meta property="og:locale" content="id_ID">
+<meta property="og:title" content="30 Tahun Pernikahan — [Nama Pasangan]">
+<meta property="og:description" content="Satu perjalanan, tiga puluh tahun, satu cinta. Mari merayakannya bersama [Nama Pasangan].">
+<meta property="og:image" content="assets/img/og-cover.svg">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 
-<a class="skip-link" href="#ucapan">Lompat ke isi utama</a>
+<a class="skip-link" href="#sambuten">Lompat ke isi utama</a>
 
 <!-- ============ HERO ============ -->
 <header class="hero" id="atas">
   <div class="hero__inner">
-    <p class="hero__eyebrow" data-bind="siteTitle">Selamat Ulang Tahun Pernikahan</p>
+    <p class="hero__eyebrow">Peringatan 30 Tahun Pernikahan</p>
 
-    <h1 class="hero__names">
-      <span data-bind="partnerA">Evel</span>
-      <span class="hero__amp" aria-hidden="true">&amp;</span>
-      <span data-bind="partnerB">[Nama Pasangan]</span>
-    </h1>
+    <h1 class="hero__title"><mark class="todo" title="Belum diisi — ganti di content.config.json">[Nama Pasangan]</mark> — Tiga Pulas Tahun Bersama</h1>
 
-    <p class="hero__number" aria-hidden="true">
-      <span class="hero__digit" data-bind="anniversaryNumber">30</span>
+    <p class="hero__number">
+      <span class="hero__digit">30</span>
       <span class="hero__unit">Tahun</span>
     </p>
-    <p class="visually-hidden" data-bind="anniversaryNumber">30</p>
 
-    <p class="hero__sub" data-bind="heroSubline">Perjalanan panjang yang tetap utuh sebagai satu cerita.</p>
+    <p class="hero__sub hero__sub--long">Sejak <mark class="todo" title="Belum diisi — ganti di content.config.json">[Tanggal Pernikahan]</mark>, dan untuk tiga puluh tahun ke depan.</p>
+    <p class="hero__sub hero__sub--short">Sejak <mark class="todo" title="Belum diisi — ganti di content.config.json">[Tanggal Pernikahan]</mark>.</p>
 
     <p class="hero__date">
-      <span data-bind="anniversaryDate">[Tanggal Ulang Tahun]</span>
+      <span class="hero__date-label">Perayaan</span>
+      <span data-bind="celebrationDate"><mark class="todo" title="Belum diisi — ganti di content.config.json">[Tanggal Perayaan]</mark></span>
+      <span aria-hidden="true">&middot;</span>
+      <span data-bind="celebrationPlace"><mark class="todo" title="Belum diisi — ganti di content.config.json">[Lokasi Perayaan]</mark></span>
     </p>
 
-    <a class="btn btn--primary" href="#ucapan">Baca Ucapan</a>
+    <a class="btn btn--primary" href="#sambuten">Baca Ucapan</a>
   </div>
 </header>
 
 <!-- ============ NAVIGASI ============ -->
 <nav class="nav" aria-label="Navigasi utama">
   <ul class="nav__list">
-    <li><a href="#ucapan">Ucapan</a></li>
-    <li><a href="#perjalanan">Perjalanan</a></li>
-    <li><a href="#galeri">Galeri</a></li>
-    <li><a href="#keluarga">Keluarga</a></li>
-    <li><a href="#kutipan">Kutipan</a></li>
+      <li><a href="#sambuten">Sambutan</a></li>
+      <li><a href="#perjalanan">Perjalanan</a></li>
+      <li><a href="#galeri">Galeri</a></li>
+      <li><a href="#keluarga">Keluarga</a></li>
+      <li><a href="#kutipan">Kutipan</a></li>
   </ul>
 </nav>
 
-<main>
+<main id="isi">
 
   <!-- ============ SAMBUTAN ============ -->
-  <section class="section" id="ucapan">
+  <section class="section" id="sambuten" aria-labelledby="h-sambuten">
     <div class="wrap">
-      <h2 class="section__title">Sambutan</h2>
+      <h2 class="section__title" id="h-sambuten">Sambutan</h2>
 
-      <div class="prose">
-        <p class="prose__salutation" data-bind="openingSalutation">Salam untuk pasangan yang kita mulailah dengan cinta dan hormat.</p>
-
-        <p>Hari ini bukan sekadar angka dalam kalender. Ini tiga puluh tahun cerita yang tidak pernah ditulis di buku mana pun, tetapi tetap utuh dalam keseharian rumah kalian.</p>
-
-        <p>Di penghujung tahun yang satu ini, kami membayangkan perjalanan kalian: pagi-pagi yang sama, tawa yang datang tiba-tiba, dan keputusan kecil yang menjadi besar karena diambil bersama.</p>
-
-        <p>Ucapan kami sederhana, tetapi kami ucapkan dengan tulus: terima kasih sudah menjadi satu rumah, satu suara, dan satu arah selama tiga puluh tahun.</p>
+      <div class="prose prose--full">
+        <p>Tiga puluh tahun. Angka itu terdengar seperti hitungan yang biasa, sampai kita sadar bahwa di dalamnya ada ribuan hari kecil yang tak pernah masuk berita: sarapan pada jam yang selalu sama, perdebatan yang berakhir dengan tawa, telepon yang tepat waktu, dan tangan yang tetap tenang saat badan sedang tidak sehat.</p>
+        <p>Kisah ini tidak dimulai dengan doa yang dramatis. Ia dimulai pada <mark class="todo" title="Belum diisi — ganti di content.config.json">[Tanggal Pernikahan]</mark> di <mark class="todo" title="Belum diisi — ganti di content.config.json">[Lokasi Pernikahan]</mark>, lalu berlanjut dengan hal-hal biasa yang justru membuat sebuah rumah terasa seperti rumah — dapur yang selalu hangat, tawa yang lebih dulu muncul daripada argumen, dan sarapan jam enam tanpa jadwal.</p>
+        <p>Maka halaman ini sengaja dibuat sederhana: kumpulan ucapan yang kami kumpulkan dari yang dekat maupun yang jauh, supaya setiap orang bisa menyisipkan kenangan kecilnya di sini. <mark class="todo" title="Belum diisi — ganti di content.config.json">[Nama Pasangan]</mark>, ini untuk kalian. Terima kasih sudah bertahan, tetap memilih satu sama lain, dan tetap menjadi tempat pulang.</p>
       </div>
 
+      <details class="prose-short">
+        <summary>Sambutan singkat</summary>
+        <div class="prose">
+          <p>Tiga puluh tahun, berisi ribuan hari kecil: sarapan pada jam yang sama, tawa setelah perdebatan, dan tangan yang tetap tenang.</p>
+          <p>Semuanya bermula pada <mark class="todo" title="Belum diisi — ganti di content.config.json">[Tanggal Pernikahan]</mark> di <mark class="todo" title="Belum diisi — ganti di content.config.json">[Lokasi Pernikahan]</mark>, lalu berlanjut dengan hal-hal biasa yang membuat sebuah rumah terasa seperti rumah.</p>
+          <p>Ini kumpulan ucapan dari yang dekat maupun yang jauh. <mark class="todo" title="Belum diisi — ganti di content.config.json">[Nama Pasangan]</mark>, ini untuk kalian.</p>
+        </div>
+      </details>
+
       <div class="countdown" id="countdown" hidden>
-        <p class="countdown__label" data-bind="countdownLabel">Hari menuju ulang tahun ke-30</p>
+        <p class="countdown__label">Hari menuju ulang tahun ke-30</p>
         <p class="countdown__value">
-          <span id="cd-days">0</span>
-          <span class="countdown__sep" aria-hidden="true">·</span>
-          <span id="cd-hours">0</span>
-          <span class="countdown__sep" aria-hidden="true">·</span>
-          <span id="cd-minutes">0</span>
+          <span id="cd-days">0</span><span class="countdown__sep" aria-hidden="true">&middot;</span><span id="cd-hours">00</span><span class="countdown__sep" aria-hidden="true">&middot;</span><span id="cd-minutes">00</span>
         </p>
-        <p class="countdown__hint">hari · jam · menit</p>
+        <p class="countdown__hint">hari &middot; jam &middot; menit</p>
       </div>
     </div>
   </section>
 
   <!-- ============ PERJALANAN ============ -->
-  <section class="section section--alt" id="perjalanan">
+  <section class="section section--alt" id="perjalanan" aria-labelledby="h-perjalanan">
     <div class="wrap">
-      <h2 class="section__title">Perjalanan</h2>
-      <p class="section__lead">Tiga puluh tahun, diringkas menjadi beberapa titik yang tetap diingat.</p>
-
+      <h2 class="section__title" id="h-perjalanan">Perjalanan kami</h2>
+      <p class="section__lead">Lima tonggak yang kami ingat, karena yang lain terlalu banyak untuk ditulis.</p>
       <ol class="timeline">
         <li class="timeline__item">
-          <p class="timeline__year">1996</p>
-          <h3 class="timeline__title">Hari pertama</h3>
-          <p class="timeline__text">Dua keluarga bertemu dalam satu hari yang sederhana, dan diikat janji untuk berbagi waktu.</p>
+          <p class="timeline__step" aria-hidden="true">1</p>
+          <h3 class="timeline__title">Tahun pertama</h3>
+          <p class="timeline__text">Sarapan pertama di <mark class="todo" title="Belum diisi — ganti di content.config.json">[Lokasi Pernikahan]</mark> terasa seperti piknik yang salah atur, dan tetap kami nikmati sampai habis.</p>
         </li>
         <li class="timeline__item">
-          <p class="timeline__year">2000-an</p>
-          <h3 class="timeline__title">Membangun rumah</h3>
-          <p class="timeline__text">Rumah sederhana terisi tawa anak-anak, aroma dapur, dan rutinitas yang tak pernah terasa membosankan.</p>
+          <p class="timeline__step" aria-hidden="true">2</p>
+          <h3 class="timeline__title">Tahun kelima</h3>
+          <p class="timeline__text">Pindah ke <mark class="todo" title="Belum diisi — ganti di content.config.json">[Kota Domisili]</mark>, membawa sedikit barang dan banyak rencana.</p>
         </li>
         <li class="timeline__item">
-          <p class="timeline__year">2010-an</p>
-          <h3 class="timeline__title">Ujian yang dilalui</h3>
-          <p class="timeline__text">Titik berat datang, dilewati bersama. Justru di sinilah kedekatan tidak hanya dihitung, tetapi dibuktikan.</p>
+          <p class="timeline__step" aria-hidden="true">3</p>
+          <h3 class="timeline__title">Tahun ke-10</h3>
+          <p class="timeline__text">Datangnya <mark class="todo" title="Belum diisi — ganti di content.config.json">[Nama Anak 1]</mark>, dan rumah belajar tentang suara tangis baru.</p>
         </li>
         <li class="timeline__item">
-          <p class="timeline__year">2026</p>
-          <h3 class="timeline__title">Tiga puluh tahun</h3>
-          <p class="timeline__text">Hari ini berdiri di ambang bab baru, dengan satu keyakinan sederhana: kita masih satu tim.</p>
+          <p class="timeline__step" aria-hidden="true">4</p>
+          <h3 class="timeline__title">Tahun ke-20</h3>
+          <p class="timeline__text">Pawai kecil, masker, dan playlist lama yang kembali jadi favorit.</p>
+        </li>
+        <li class="timeline__item">
+          <p class="timeline__step" aria-hidden="true">5</p>
+          <h3 class="timeline__title">Tahun ke-30</h3>
+          <p class="timeline__text">Kembali ke <mark class="todo" title="Belum diisi — ganti di content.config.json">[Lokasi Pernikahan]</mark>, satu foto, tiga puluh tahun dalam satu bingkai.</p>
         </li>
       </ol>
     </div>
   </section>
 
   <!-- ============ GALERI ============ -->
-  <section class="section" id="galeri">
+  <section class="section" id="galeri" aria-labelledby="h-galeri">
     <div class="wrap">
-      <h2 class="section__title">Galeri</h2>
-      <p class="section__lead">Ilustrasi bawaan. Ganti dengan foto asli keluarga kapan saja melalui <code>config.js</code>.</p>
-
+      <h2 class="section__title" id="h-galeri">Galeri</h2>
+      <p class="section__lead">Tiga bingkai kenangan kami. Ganti foto asli kapan saja lewat content.config.json.</p>
       <ul class="gallery" id="gallery-list">
         <li class="gallery__item">
-          <img src="assets/img/placeholder-1.svg" alt="Ilustrasi dua orang berjalan bersama di taman" loading="lazy" width="640" height="480">
+          <img src="assets/img/placeholder-1.svg" alt="Ilustrasi dua orang berjalan bersama di taman pada sore hari" width="640" height="480"
+               loading="eager" decoding="async"
+               data-fallback="assets/img/placeholder-1.svg" data-photo="assets/foto-1.jpg">
           <p class="gallery__caption">Dua orang, satu arah</p>
         </li>
         <li class="gallery__item">
-          <img src="assets/img/placeholder-2.svg" alt="Ilustrasi dua tangan yang berpegangan" loading="lazy" width="640" height="480">
+          <img src="assets/img/placeholder-2.svg" alt="Ilustrasi dua tangan yang berpegangan erat" width="640" height="480"
+               loading="lazy" decoding="async"
+               data-fallback="assets/img/placeholder-2.svg" data-photo="assets/foto-2.jpg">
           <p class="gallery__caption">Cengkeraman yang tak pernah longgar</p>
         </li>
         <li class="gallery__item">
-          <img src="assets/img/placeholder-3.svg" alt="Ilustrasi bunga melati di sore hari" loading="lazy" width="640" height="480">
+          <img src="assets/img/placeholder-3.svg" alt="Ilustrasi bunga melati yang mekar di sore hari" width="640" height="480"
+               loading="lazy" decoding="async"
+               data-fallback="assets/img/placeholder-3.svg" data-photo="assets/foto-3.jpg">
           <p class="gallery__caption">Usia yang panjang</p>
-        </li>
-        <li class="gallery__item">
-          <img src="assets/img/placeholder-4.svg" alt="Ilustrasi dua orang duduk melihat cakrawala" loading="lazy" width="640" height="480">
-          <p class="gallery__caption">Cerita yang masih terlalu panjang untuk diceritakan</p>
         </li>
       </ul>
     </div>
   </section>
 
   <!-- ============ UCAPAN KELUARGA ============ -->
-  <section class="section section--alt" id="keluarga">
+  <section class="section section--alt" id="keluarga" aria-labelledby="h-keluarga">
     <div class="wrap">
-      <h2 class="section__title">Ucapan Keluarga</h2>
-
-      <ul class="wishes">
+      <h2 class="section__title" id="h-keluarga">Dari kami untuk mereka</h2>
+      <p class="section__lead">Ucapan yang kami kumpulkan, seadanya dan dari hati.</p>
+      <ul class="wishes" id="wishes-list">
         <li class="wish">
-          <p class="wish__from">Untuk keluarga besar</p>
-          <p class="wish__text">Semoga kesehatan dan umur panjang selalu menyertai kalian.</p>
+          <p class="wish__from"><mark class="todo" title="Belum diisi — ganti di content.config.json">[Nama Anak 1]</mark></p>
+          <p class="wish__relation">Anak</p>
+          <p class="wish__text">Terima kasih sudah menjadi rumah kedua yang paling aman. Kami belajar dewasa dari kalian berdua.</p>
         </li>
         <li class="wish">
-          <p class="wish__from">Untuk anak-anak</p>
-          <p class="wish__text">Terima kasih sudah menjadi ayah dan ibu yang hangat bagi kami semua.</p>
+          <p class="wish__from"><mark class="todo" title="Belum diisi — ganti di content.config.json">[Nama Anak 2]</mark></p>
+          <p class="wish__relation">Anak</p>
+          <p class="wish__text">Kalau kami mengingat masa kecil, kami mengingat pelukan kalian berdua. Sampai kapan pun.</p>
         </li>
         <li class="wish">
-          <p class="wish__from">Untuk tetangga dan sahabat</p>
-          <p class="wish__text">Kalian adalah contoh bahwa cinta yang baik tumbuh diam-diam, lalu bertahan lama.</p>
+          <p class="wish__from"><mark class="todo" title="Belum diisi — ganti di content.config.json">[Nama Orang Tua]</mark></p>
+          <p class="wish__relation">Orang tua</p>
+          <p class="wish__text">Dari kalian berdua kami belajar bahwa cinta bukan hal besar, tapi kebiasaan kecil yang diulang setiap hari.</p>
         </li>
       </ul>
     </div>
   </section>
 
   <!-- ============ KUTIPAN ============ -->
-  <section class="section" id="kutipan">
+  <section class="section" id="kutipan" aria-labelledby="h-kutipan">
     <div class="wrap">
-      <h2 class="section__title">Kutipan</h2>
-
+      <h2 class="section__title" id="h-kutipan">Kutipan</h2>
       <figure class="quote">
         <blockquote>
-          <p>Cinta bukan cinta karena berada bersama, melainkan cinta karena memilih untuk tetap bersama.</p>
+          <p>Tiga puluh tahun bukan angka yang kami hitung, melainkan jumlah malam yang kami pilih untuk tetap bersama.</p>
         </blockquote>
-        <figcaption>Anonim</figcaption>
-      </figure>
-
-      <figure class="quote">
-        <blockquote>
-          <p>Tiga puluh tahun bukan angka. Itu tiga puluh kali kita memilih untuk mulai lagi.</p>
-        </blockquote>
-        <figcaption>Keluarga besar</figcaption>
+        <figcaption><cite>— <mark class="todo" title="Belum diisi — ganti di content.config.json">[Nama Pasangan]</mark></cite></figcaption>
       </figure>
     </div>
   </section>
@@ -191,8 +200,9 @@
 <!-- ============ FOOTER ============ -->
 <footer class="footer">
   <div class="wrap">
-    <p class="footer__note">Situs ini dibuat sebagai hadiah dari keluarga yang menyayangi.</p>
-    <p class="footer__credit">Website ucapan · GitHub Pages</p>
+    <p class="footer__line1">Tiga puluh tahun, dan cerita ini baru dimulai.</p>
+    <p class="footer__line2">Sampai jumpa di <mark class="todo" title="Belum diisi — ganti di content.config.json">[Tanggal Perayaan]</mark>, <mark class="todo" title="Belum diisi — ganti di content.config.json">[Lokasi Perayaan]</mark>.</p>
+    <p class="footer__credit">Disusun oleh <mark class="todo" title="Belum diisi — ganti di content.config.json">[Nama Penyusun]</mark> untuk <mark class="todo" title="Belum diisi — ganti di content.config.json">[Nama Pasangan]</mark>.</p>
   </div>
 </footer>
 
