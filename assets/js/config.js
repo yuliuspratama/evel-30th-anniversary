@@ -8,7 +8,9 @@ window.SITE_CONFIG = {
     "language": "id-ID",
     "themeColor": "#6f1a26",
     "countdownTarget": null,
-    "countdownLabel": "Hari menuju ulang tahun ke-30"
+    "countdownLabel": "Hari menuju ulang tahun ke-30",
+    "_siteUrl_note": "URL dasar situs TANPA garis miring di akhir. Dipakai hanya untuk og:image + canonical, karena scraper social (Facebook, WhatsApp, X) TIDAK bisa me-resolve path relatif. Wajib diisi agar kartu berbagi tampil. Ganti bila nama repo atau domain berubah.",
+    "siteUrl": "https://yuliuspratama.github.io/evel-30th-anniversary"
   },
   values: {
     "Nama Pasangan": "[Nama Pasangan]",

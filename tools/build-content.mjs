@@ -174,6 +174,17 @@ const G = cfg.galeri, K = cfg.keluarga, Q = cfg.kutipan, F = cfg.footer;
 const title = fill(M.title);
 const description = fill(M.description);
 
+/* ---------- 6b. URL absolut untuk tautan berbagi ----------
+   Tautan di dalam halaman HARUS relatif (aman di subpath). Tapi og:image
+   dan <link rel=canonical> harus ABSOLUT: scraper social media dan
+   WhatsApp mengambil URL itu dari server mana pun, dan URL relatif
+   tidak bisa di_resolve tanpa tahu halaman induknya.
+
+   siteUrl dikosongkan secara default karena di github.io/<repo>/ path
+   relatif sudah aman. Diisi hanya bila memakai domain kustom. */
+const SITE_URL = String(SET.siteUrl || '').trim().replace(/\/+$/, '');
+const absolute = (rel) => SITE_URL ? `${SITE_URL}/${rel}` : rel;
+
 const html = `<!DOCTYPE html>
 <!--
   BERKAS HASIL GENERASI — jangan disunting langsung.
@@ -192,8 +203,11 @@ const html = `<!DOCTYPE html>
 <meta property="og:locale" content="id_ID">
 <meta property="og:title" content="${esc(fill(M.ogTitle))}">
 <meta property="og:description" content="${esc(fill(M.ogDescription))}">
-<meta property="og:image" content="assets/img/og-cover.svg">
+<meta property="og:image" content="${esc(absolute('assets/img/og-cover.png'))}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+${SITE_URL ? `<link rel="canonical" href="${esc(SITE_URL)}/">` : ''}
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
