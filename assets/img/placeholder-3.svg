@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" width="640" height="480" role="img" aria-label="Ilustrasi bunga melati di sore hari">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" width="640" height="480" role="img" aria-label="Ilustrasi bunga melati yang mekar di sore hari">
   <defs>
     <linearGradient id="sky3" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#f3dfc4"/>
+      <stop offset="0%" stop-color="#fbeed2"/>
       <stop offset="60%" stop-color="#e7c6a6"/>
       <stop offset="100%" stop-color="#d9b191"/>
     </linearGradient>
@@ -9,37 +9,70 @@
       <stop offset="0%" stop-color="#fff6e0"/>
       <stop offset="100%" stop-color="#f0c78c" stop-opacity="0"/>
     </radialGradient>
+    <linearGradient id="petal3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f0e6e8"/>
+    </linearGradient>
+    <linearGradient id="stem3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5f7f5a"/>
+      <stop offset="100%" stop-color="#3d5538"/>
+    </linearGradient>
+    <filter id="soft3" x="-5%" y="-5%" width="110%" height="110%">
+      <feGaussianBlur stdDeviation="2"/>
+    </filter>
   </defs>
 
   <rect width="640" height="480" fill="url(#sky3)"/>
-  <circle cx="320" cy="210" r="150" fill="url(#sun3)"/>
-  <circle cx="320" cy="210" r="54" fill="#fff1cf" opacity="0.9"/>
+  <circle cx="500" cy="110" r="160" fill="url(#sun3)"/>
+  <circle cx="500" cy="110" r="54" fill="#fff1cf" opacity="0.9"/>
 
-  <!-- daun melati -->
-  <path d="M60 480 Q180 330 320 300 Q460 330 580 480 Z" fill="#7f9f78" opacity="0.9"/>
-  <path d="M110 480 Q210 360 320 330 Q430 360 530 480 Z" fill="#6f9169"/>
+  <!-- batang utama -->
+  <path d="M320 480 Q322 380 318 280 Q316 240 320 200"
+        stroke="url(#stem3)" stroke-width="6" fill="none" stroke-linecap="round"/>
 
-  <!-- batang -->
-  <path d="M320 300 Q300 380 318 470" stroke="#5f7f5a" stroke-width="9" fill="none" stroke-linecap="round"/>
+  <!-- daun -->
+  <path d="M320 360 Q280 340 250 360 Q280 372 320 366 Z" fill="#5f7f5a" opacity="0.9"/>
+  <path d="M320 320 Q360 300 390 320 Q360 332 320 326 Z" fill="#6d9168" opacity="0.9"/>
+  <path d="M318 280 Q286 262 258 280 Q286 292 318 286 Z" fill="#5f7f5a" opacity="0.85"/>
 
-  <!-- bunga melati -->
-  <g fill="#fffdf8">
-    <ellipse cx="320" cy="248" rx="26" ry="40"/>
-    <ellipse cx="320" cy="248" rx="26" ry="40" transform="rotate(60 320 248)"/>
-    <ellipse cx="320" cy="248" rx="26" ry="40" transform="rotate(120 320 248)"/>
-    <ellipse cx="320" cy="248" rx="26" ry="40" transform="rotate(180 320 248)"/>
-    <ellipse cx="320" cy="248" rx="26" ry="40" transform="rotate(240 320 248)"/>
-    <ellipse cx="320" cy="248" rx="26" ry="40" transform="rotate(300 320 248)"/>
+  <!-- kuncup -->
+  <ellipse cx="318" cy="220" rx="9" ry="16" fill="#f0e6e8" stroke="#d9c0c2" stroke-width="1.5"/>
+  <ellipse cx="324" cy="210" rx="7" ry="13" fill="#ffffff" opacity="0.85"/>
+
+  <!-- bunga mekar (5 kelopak) -->
+  <g transform="translate(320 175)" filter="url(#soft3)">
+    <ellipse cx="0" cy="-24" rx="13" ry="20" fill="url(#petal3)"/>
+    <ellipse cx="0" cy="-24" rx="13" ry="20" fill="url(#petal3)" transform="rotate(72)"/>
+    <ellipse cx="0" cy="-24" rx="13" ry="20" fill="url(#petal3)" transform="rotate(144)"/>
+    <ellipse cx="0" cy="-24" rx="13" ry="20" fill="url(#petal3)" transform="rotate(216)"/>
+    <ellipse cx="0" cy="-24" rx="13" ry="20" fill="url(#petal3)" transform="rotate(288)"/>
+    <circle cx="0" cy="0" r="9" fill="#e9c97a"/>
+    <circle cx="0" cy="0" r="5" fill="#c39a4e" opacity="0.85"/>
   </g>
-  <circle cx="320" cy="248" r="14" fill="#e9c97a"/>
 
-  <!-- kuntum kecil -->
-  <g fill="#fffdf8" opacity="0.85">
-    <ellipse cx="196" cy="286" rx="12" ry="18"/>
-    <ellipse cx="196" cy="286" rx="12" ry="18" transform="rotate(72 196 286)"/>
-    <ellipse cx="196" cy="286" rx="12" ry="18" transform="rotate(144 196 286)"/>
-    <ellipse cx="444" cy="292" rx="11" ry="16"/>
-    <ellipse cx="444" cy="292" rx="11" ry="16" transform="rotate(72 444 292)"/>
-    <ellipse cx="444" cy="292" rx="11" ry="16" transform="rotate(144 444 292)"/>
+  <!-- bunga kecil lain -->
+  <g transform="translate(220 380)" opacity="0.9">
+    <ellipse cx="0" cy="-14" rx="7" ry="11" fill="url(#petal3)"/>
+    <ellipse cx="0" cy="-14" rx="7" ry="11" fill="url(#petal3)" transform="rotate(72)"/>
+    <ellipse cx="0" cy="-14" rx="7" ry="11" fill="url(#petal3)" transform="rotate(144)"/>
+    <ellipse cx="0" cy="-14" rx="7" ry="11" fill="url(#petal3)" transform="rotate(216)"/>
+    <ellipse cx="0" cy="-14" rx="7" ry="11" fill="url(#petal3)" transform="rotate(288)"/>
+    <circle cx="0" cy="0" r="5" fill="#e9c97a"/>
+    <path d="M220 394 Q218 430 222 470" stroke="#5f7f5a" stroke-width="2.5" fill="none" opacity="0.7"/>
   </g>
+
+  <g transform="translate(430 360)" opacity="0.92">
+    <ellipse cx="0" cy="-15" rx="8" ry="12" fill="url(#petal3)"/>
+    <ellipse cx="0" cy="-15" rx="8" ry="12" fill="url(#petal3)" transform="rotate(72)"/>
+    <ellipse cx="0" cy="-15" rx="8" ry="12" fill="url(#petal3)" transform="rotate(144)"/>
+    <ellipse cx="0" cy="-15" rx="8" ry="12" fill="url(#petal3)" transform="rotate(216)"/>
+    <ellipse cx="0" cy="-15" rx="8" ry="12" fill="url(#petal3)" transform="rotate(288)"/>
+    <circle cx="0" cy="0" r="6" fill="#e9c97a"/>
+    <path d="M430 375 Q432 410 428 470" stroke="#5f7f5a" stroke-width="2.5" fill="none" opacity="0.7"/>
+  </g>
+
+  <!-- kelopak jatuh -->
+  <ellipse cx="120" cy="200" rx="7" ry="12" fill="#f0e6e8" transform="rotate(30 120 200)" opacity="0.6"/>
+  <ellipse cx="540" cy="260" rx="6" ry="10" fill="#f0e6e8" transform="rotate(-20 540 260)" opacity="0.55"/>
+  <ellipse cx="380" cy="430" rx="8" ry="13" fill="#f0e6e8" transform="rotate(45 380 430)" opacity="0.7"/>
 </svg>

@@ -605,3 +605,197 @@ mark.todo {
 
   a[href^="#"]::after { content: ""; }
 }
+
+/* =====================================================================
+   ENHANCEMENT — lapisan dekoratif elegan (tidak menggerus kontrak warna)
+   ===================================================================== */
+
+/* Font display: muat Playfair Display dari Google Fonts jika online */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap');
+
+/* Hero: tambah overlay tekstur halus + vignette */
+.hero::before {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 110%, rgba(0,0,0,0.28) 0%, transparent 55%),
+    radial-gradient(circle at 18% 22%, rgba(255,255,255,0.10) 0%, transparent 32%),
+    radial-gradient(circle at 82% 28%, rgba(255,255,255,0.07) 0%, transparent 28%);
+  pointer-events: none;
+  z-index: 0;
+}
+.hero__inner, .hero__date-wrap { position: relative; z-index: 1; }
+
+/* Eyebrow dengan garis dekoratif */
+.hero__eyebrow {
+  display: inline-block;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+.hero__eyebrow::before,
+.hero__eyebrow::after {
+  content: "";
+  display: inline-block;
+  width: 2.2rem; height: 1px;
+  background: var(--gold-light);
+  vertical-align: middle;
+  margin: 0 0.8rem;
+  opacity: 0.85;
+}
+
+/* Angka besar 30 — elegan, bukan tebal */
+.hero__digit {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(4.5rem, 14vw, 8.5rem);
+  line-height: 1;
+  background: linear-gradient(180deg, var(--gold-light) 0%, #e8cd94 50%, var(--gold) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
+}
+.hero__unit {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.1rem, 3vw, 1.6rem);
+  margin-left: 0.4rem;
+}
+
+/* Section title: garis dekoratif di bawah */
+h2.section__title {
+  position: relative;
+  display: block;
+}
+h2.section__title::after {
+  content: "";
+  display: block;
+  width: 3.5rem; height: 2px;
+  margin: 0.7rem auto 0;
+  background: linear-gradient(90deg, transparent 0%, var(--gold) 50%, transparent 100%);
+  border-radius: 2px;
+}
+
+/* Timeline: garis penghubung halus — tidak mengganggu center alignment */
+@media (min-width: 768px) {
+  .timeline {
+    position: relative;
+  }
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 50%; top: 0; bottom: 0;
+    width: 2px;
+    transform: translateX(-1px);
+    background: linear-gradient(180deg, transparent 0%, var(--border) 8%, var(--border) 92%, transparent 100%);
+  }
+}
+
+/* Galeri: caption elegan dengan garis emas */
+.gallery__caption {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--ink-soft);
+  text-align: center;
+  margin-top: 0.6rem;
+  position: relative;
+  padding-top: 0.8rem;
+}
+.gallery__caption::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 2rem; height: 1px;
+  background: var(--gold);
+  opacity: 0.6;
+}
+
+/* Kartu ucapan: kutip dekoratif */
+.wish__text {
+  position: relative;
+}
+.wish__text::before {
+  content: "\201C";
+  font-family: var(--font-display);
+  font-size: 3rem;
+  line-height: 1;
+  color: var(--wedding-soft);
+  position: absolute;
+  top: -0.8rem; left: -0.3rem;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Kutipan: tipografi besar elegan */
+#kutipan blockquote {
+  position: relative;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.3rem, 3.5vw, 2rem);
+  line-height: 1.5;
+  color: var(--wedding-deep);
+  max-width: 38rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 1rem;
+}
+#kutipan blockquote::before {
+  content: "\201C";
+  font-size: 5rem;
+  line-height: 0.5;
+  color: var(--gold);
+  opacity: 0.45;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* (Reveal animasi tetap memakai definisi asli di atas — lihat .reveal { opacity: 0 }) */
+
+/* Footer: garis emas pemisah */
+.footer {
+  position: relative;
+  border-top: 2px solid transparent;
+  background-image: linear-gradient(var(--paper), var(--paper)),
+                    linear-gradient(90deg, transparent 0%, var(--gold) 50%, transparent 100%);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+/* Dekoratif: bunga kecil di sudut hero (pure CSS) */
+.hero::after {
+  content: "";
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 60px;
+  background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.18) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Nav: glassmorphism halus */
+.site-nav {
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  background: rgba(253, 250, 247, 0.88);
+}
+
+/* Hover galeri: zoom halus pada gambar */
+.gallery__item {
+  overflow: hidden;
+}
+.gallery__item img {
+  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.gallery__item:hover img {
+  transform: scale(1.04);
+}
+
+/* Focus state untuk keyboard nav link */
+.site-nav a:focus-visible {
+  background: var(--wedding-soft);
+  border-radius: 6px;
+}

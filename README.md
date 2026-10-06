@@ -1,6 +1,9 @@
 # evel-30th-anniversary
 
-Situs ucapan satu halaman untuk peringatan 30 tahun pernikahan.
+Situs ucapan satu halaman untuk peringatan 30 tahun pernikahan —
+sebuah karya ucapan dari anak untuk Papa & Mama, merayakan tiga puluh
+tahun pernikahan mereka sejak 5 Oktober 1996.
+
 HTML, CSS, dan JavaScript murni — tanpa backend, tanpa dependensi runtime,
 tanpa build step untuk menyajikan situs.
 
