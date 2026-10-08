@@ -89,7 +89,7 @@ group('A. Struktur & semantik');
       lang: document.documentElement.lang,
       h1: Array.from(document.querySelectorAll('h1')),
       headings,
-      sections: Array.from(document.querySelectorAll('main section[id]')).map(s => s.id),
+      sections: Array.from(document.querySelectorAll('main section.section[id]')).map(s => s.id),
       quotes: document.querySelectorAll('blockquote').length,
       cites: document.querySelectorAll('blockquote cite, figcaption cite').length,
       cardText: (document.querySelector('.card')?.innerText || '').length,

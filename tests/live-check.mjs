@@ -100,8 +100,8 @@ check('semua anchor internal resolve', anchors.every(a => a.ok),
 
 /* Naskah benar-benar tampil, bukan hanya kerangka HTML */
 const copy = await page.evaluate(() => ({
-  sections: document.querySelectorAll('main section').length,
-  sectionIds: Array.from(document.querySelectorAll('main section[id]')).map(s => s.id),
+  sections: document.querySelectorAll('main > section[id], main section.section[id]').length,
+  sectionIds: Array.from(document.querySelectorAll('main section.section[id]')).map(s => s.id),
   stanzas: document.querySelectorAll('.lyric__stanza').length,
   textLen: document.querySelector('main').innerText.trim().length,
   lang: document.documentElement.lang,

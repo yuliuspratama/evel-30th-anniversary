@@ -1,93 +1,43 @@
 # evel-30th-anniversary
 
-Situs ucapan satu halaman untuk peringatan 30 tahun pernikahan —
-sebuah karya ucapan dari anak untuk Papa & Mama, merayakan tiga puluh
-tahun pernikahan mereka sejak 5 Oktober 1996.
+Situs kartu ucapan satu halaman dari seorang anak (Yuli) untuk Papa &
+Mama — merayakan tiga puluh tahun pernikahan mereka sejak
+5 Oktober 1996, dengan lagu "Mutiara Cinta Kita" yang mengalun saat
+situs dibuka.
 
-HTML, CSS, dan JavaScript murni — tanpa backend, tanpa dependensi runtime,
-tanpa build step untuk menyajikan situs.
+HTML, CSS, dan JavaScript murni — tanpa backend, tanpa dependensi
+runtime, tanpa build step untuk menyajikan situs.
+
+## Konsep
+
+Kartu ucapan biasa dari anak ke orang tua:
+
+- **Satu anak (Yuli)** — tidak ada ucapan dari anggota keluarga lain.
+- **Tanpa cerita perjalanan** — anak tidak menceritakan hal yang tidak
+  ia ketahui tentang pernikahan orang tuanya. Naskahnya jujur: "aku
+  tidak hadir di awal cerita kalian... aku tidak akan berpura-pura
+  tahu."
+- **Lagu** "Mutiara Cinta Kita" berputar saat situs dibuka (autoplay
+  dengan fallback interaksi pertama bila browser memblokir), lengkap
+  dengan **lirik** 8 stanza.
 
 ## Struktur
 
-    content.config.json      SATU-SATUNYA sumber naskah & nilai yang dapat diganti
-    DEPLOY.md                panduan publikasi, rollback, checklist verifikasi
-    .nojekyll                lewati Jekyll; Pages menyajikan branch apa adanya
-    tools/build-content.mjs  pembuat index.html dari content.config.json
-    tools/lint-text.mjs      gagalkan karakter asing & kebocoran istilah teknis
-    index.html              BERKAS HASIL GENERASI — jangan disunting langsung
-    assets/css/style.css    gaya, responsif, hormat prefers-reduced-motion
-    assets/js/config.js     hasil generasi: pengaturan + registry nilai untuk main.js
-    assets/js/main.js       substitusi token, hitung mundur, fallback foto, reveal
-    assets/img/*.svg        ilustrasi bawaan (SVG asli proyek ini, bebas hak)
-    assets/img/og-cover.png hasil generate dari og-cover.svg untuk kartu berbagi
-    tools/static-server.mjs server statis untuk pratinjau & pengujian
-    tests/                  rangkaian uji browser + tangkapan layar
+| Berkas                    | Peran                                                |
+| -------------------------- | ---------------------------------------------------- |
+| `content.config.json`      | SATU-SATUNYA sumber naskah & nilai                   |
+| `tools/build-content.mjs`  | merakit `index.html` + `assets/js/config.js`         |
+| `assets/css/style.css`     | seluruh tampilan                                     |
+| `assets/js/main.js`        | pemutar lagu, token, reveal, scroll-spy              |
+| `assets/audio/`            | lagu (mp3)                                           |
+| `tools/`                   | build + server statis + lint teks                    |
+| `tests/`                   | rangkaian uji (Chromium via playwright-core)         |
 
-## Mengubah isi — hanya satu file
+## Alur kerja
 
-Semua teks, nama, tanggal, foto, dan kutipan ada di
-**`content.config.json`**. Setelah mengedit file itu, bangun ulang:
-
-    node tools/build-content.mjs
-
-Tidak ada edit manual ke `index.html`. Konsekuensinya: apa pun yang
-tidak ada di `content.config.json` tidak bisa bocor ke halaman.
-
-### Registry nilai
-
-Bagian `values` memetakan nama token ke nilainya. Ada dua cara memakai:
-
-| Cara                | Contoh                                    | Hasil                       |
-| ------------------- | ----------------------------------------- | --------------------------- |
-| Isi nilai aslinya   | `"Nama Pasangan": "Budi Santoso"`         | token hilang, teks jadi asli |
-| Biarkan kosong      | `"Nama Pasangan": "[Nama Pasangan]"`       | token tampil ditandai kuning |
-
-Placeholder yang sengaja dibiarkan tampil diberi latar kuning
-(`.todo`) supaya jelas masih ada yang perlu diisi, dan `build-content.mjs`
-mencetak daftar token yang belum terisi setiap kali dijalankan.
-
-### Daftar placeholder
-
-Semua placeholder ada di registry `values`. Placeholder yang tidak ada
-di sana akan **menggagalkan build** — begitu juga `lorem ipsum`.
-
-| Token                                     | Wajib? | Contoh                     |
-| ----------------------------------------- | ------ | -------------------------- |
-| `[Nama Pasangan]`                         | ya     | `Budi Santoso`             |
-| `[Tanggal Pernikahan]`                    | ya     | `12 Juni 1996`             |
-| `[Lokasi Pernikahan]`                     | ya     | `Gedung Serbaguna, Malang`  |
-| `[Tanggal Perayaan]`                      | ya     | `8 Juni 2026`               |
-| `[Lokasi Perayaan]`                       | ya     | `Kafe Reid, Malang`          |
-| `[Nama Penyusun]`                         | ya     | `Keluarga Besar`            |
-| `[Kota Domisili]`                         | opsional | `Malang`                 |
-| `[Nama Anak 1]` `[Nama Anak 2]`           | ya     | `Alya`, `Rafi`              |
-| `[Nama Anak 3]` `[Nama Keponakan]`        | opsional | `Nadia`, `Bagas`         |
-| `[Nama Orang Tua]`                        | ya     | `Bapak Hendra & Ibu Sri`    |
-| `[Deskripsi Foto 1..3]`                   | ya*    | `Budi dan partner di taman` |
-| `[Keterangan Foto 1..3]`                  | tidak  | boleh dikosongkan           |
-
-\* Alt text hanya wajib bila file foto aslinya sudah dipasang.
-
-Ucapan keluarga yang ditandai `optional: true` di `config.keluarga.voices`
-**ikut hilang** bila namanya belum diisi, supaya tidak ada kartu kosong.
-Placeholder yang muncul di dalam kalimat (mis. `[Kota Domisili]`)
-selalu tetap tampil menandai teks yang belum lengkap.
-
-## Mengganti foto
-
-1. Letakkan foto di `assets/foto-1.jpg` (atau nama lain, ubah di config).
-2. Isi `Deskripsi Foto N` di registry `values` — **wajib**, alt tidak boleh kosong.
-3. `Keterangan Foto N` boleh dikosongkan; paragraf caption-nya otomatis dihapus.
-4. Jalankan `node tools/build-content.mjs`.
-
-Selama file fotonya belum ada, galeri otomatis memakai ilustrasi SVG
-bawaan yang alt-nya menjelaskan ilustrasi itu sendiri. Jika foto dipasang
-lalu gagal dimuat (404), `main.js` mengembalikannya ke ilustrasi.
-
-## Menjalankan secara lokal
-
-    node tools/build-content.mjs        # bangun ulang setelah edit
-    node tools/static-server.mjs . 8899 # buka http://127.0.0.1:8899
+1. Edit `content.config.json`.
+2. Jalankan `node tools/build-content.mjs`.
+3. Refresh browser (atau `node tools/static-server.mjs . 8899`).
 
 ## Menjalankan pengujian
 
@@ -97,12 +47,12 @@ Enam rangkaian, semuanya memakai Chromium sungguhan:
 
 | Rangkaian            | Cakupan                                                                 |
 | -------------------- | ------------------------------------------------------------------------ |
-| `build-content.mjs`  | token tak dikenal / lorem ipsum ditolak; laporan placeholder kosong      |
-| `lint-text.mjs`      | karakter asing (CJK/Cyrillic) & istilah teknis yang bocor ke teks halaman |
-| `tests/og-preview.mjs` | kartu OG tidak terpotong; regenerate `assets/img/og-cover.png`        |
-| `tests/ui.test.mjs`  | struktur, heading, alt, tautan, aset, konsol, keyboard, kontras WCAG AA, 5 viewport, reduced motion, tanpa-JS, registry |
-| `tests/filled.test.mjs` | config berisi nilai nyata: judul, meta, hitung mundur, foto asli vs fallback, ketahanan konfigurasi rusak |
-| `tests/shots.mjs`    | tangkapan layar ke `tests/screenshots/` untuk pemeriksaan visual         |
+| `build-content.mjs`  | merakit ulang index.html + config.js dari config                          |
+| `lint-text.mjs`      | karakter asing & kebocoran istilah teknis ditolak                         |
+| `og-preview.mjs`     | kartu OG dirender sungguhan; teks tidak terpotong                         |
+| `ui.test.mjs`        | 70+ cek: semantik, kontras WCAG, 4 viewport, reduced-motion, tanpa-JS, audio player, autoplay, kontrak POV anak (tanpa "adik"/"kucing"/"pindah kota") |
+| `filled.test.mjs`    | bukti config terpusat: ganti nilai — halaman ikut berubah; skenario audio gagal |
+| `shots.mjs`          | tangkapan layar tiap section untuk pemeriksaan mata                       |
 
 Butuh `playwright-core` (ada di `tests/node_modules/`, tidak di-commit) dan
 Chromium di `/usr/bin/chromium`. Kalau `tests/node_modules/` belum ada:
@@ -111,7 +61,8 @@ Chromium di `/usr/bin/chromium`. Kalau `tests/node_modules/` belum ada:
 
 Satu rangkaian **tidak** ada di `run-tests.sh`: `tests/live-check.mjs`. Ia
 menguji URL `github.io/<repo>/` yang sudah daring, untuk membuktikan aset
-memuat di subpath — kondisi yang tidak bisa dibuktikan server lokal. Jalankan
+memuat di subpath — kondisi yang tidak bisa dibuktikan server lokal.
+Termasuk memverifikasi file lagu tersaji (200, `audio/mp3`). Jalankan
 setelah publish:
 
     node tests/live-check.mjs
@@ -119,14 +70,36 @@ setelah publish:
 ## Perilaku bila JavaScript mati
 
 Seluruh naskah sudah ada di `index.html`, jadi halaman tetap lengkap dan
-terbaca. Yang tidak aktif: substitusi token runtime, hitung mundur,
-animasi muncul saat digulir, dan penanda section aktif.
+terbaca. Yang tidak aktif: substitusi token runtime, autoplay lagu,
+animasi muncul saat digulir, dan penanda section aktif. Tombol player
+tetap tampil tapi tidak berfungsi — naskah kartu tetap utuh tanpa itu.
+
+## Mengganti/menambah lagu
+
+1. Taruh file mp3 di `assets/audio/`.
+2. Ubah `settings.audio.src` di `content.config.json`.
+3. Bangun ulang: `node tools/build-content.mjs`.
+
+Perilaku pemutaran:
+
+- Saat halaman dibuka, `main.js` mencoba autoplay.
+- Bila kebijakan browser memblokir, lagu mulai otomatis pada interaksi
+  pertama (klik/gulir/sentuh/tombol apa pun).
+- Tombol di bilah player menjeda/melanjutkan; lagu berputar berulang
+  (loop).
+
+## Lirik
+
+Lirik lengkap "Mutiara Cinta Kita" tersimpan di
+`content.config.json` -> `lirik.sections` (8 stanza: Intro, Verse 1,
+Pre-Chorus, Chorus, Verse 2, Chorus, Bridge, Outro) dan dirender
+sebagai teks utuh yang bisa dibaca sambil mendengarkan.
 
 ## Aksesibilitas
 
 - Satu `<h1>`, lalu `<h2>` per section, urutan heading tidak melompat
-- `lang="id-ID"`, `<title>` ≤ 60 karakter, meta description ≤ 155 karakter
-- Skip-link, cincin fokus 3px yang terlihat di setiap latar, target sentuh ≥ 24px
+- `lang="id-ID"`, `<title>` <= 70 karakter
+- Skip-link, cincin fokus 3px yang terlihat di setiap latar
 - Semua pasangan warna teks/latar diuji WCAG AA dari DOM sungguhan
 - `prefers-reduced-motion: reduce` mematikan animasi, transisi, dan scroll halus
 
@@ -136,24 +109,13 @@ Situsnya sudah daring:
 
     https://yuliuspratama.github.io/evel-30th-anniversary/
 
-Tidak ada build step, tidak ada Jekyll, dan semua path aset relatif sehingga
-aman pada URL subpath repository. GitHub Pages menyajikan branch `main` apa
-adanya (berkas `.nojekyll` mematikan pemrosesan Jekyll).
-
-Ringkasnya:
-
-    gh repo create <nama> --public --source=. --remote=origin --push
-    gh api -X POST repos/<pemilik>/<nama>/pages \
-      -f source[branch]=main -f source[path]=/
-
-Panduan lengkap — aktivasi Pages, memilih branch, mengganti nama/tanggal/foto,
-memperbarui konten, rollback, checklist verifikasi akhir, dan catatan batasan
-domain kustom — ada di **[DEPLOY.md](DEPLOY.md)**.
+Tidak ada build step, tidak ada Jekyll, dan semua path aset relatif
+sehingga aman pada URL subpath repository. GitHub Pages menyajikan
+branch `main` apa adanya (berkas `.nojekyll` mematikan pemrosesan
+Jekyll). Panduan lengkap ada di **[DEPLOY.md](DEPLOY.md)**.
 
 ## Batasan yang perlu diketahui
 
-- Foto bawaan adalah **ilustrasi SVG**, bukan foto keluarga. Ganti lewat
-  `content.config.json`.
-- Nilai `[Nama Pasangan]` dll. masih berupa token sampai diisi — inilah
-  disengaja, dan ditandai kuning di halaman.
-- Kutipan adalah teks orisinal untuk halaman ini, bukan kutipan penulis lain.
+- Autoplay dengan suara penuh bergantung kebijakan browser; di
+  sebagian browser lagu mulai setelah interaksi pertama.
+- Kutipan adalah teks orisinal dari lirik lagu, untuk halaman ini.
