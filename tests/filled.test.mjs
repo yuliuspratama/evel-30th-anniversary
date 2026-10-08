@@ -1,27 +1,23 @@
 /* =====================================================================
    filled.test.mjs — uji dengan config yang SUDAH DIISI NILAI NYATA
    ---------------------------------------------------------------------
-   uji utama memakai config setengah kosong (placeholder tampil). Skrip ini
-   menyalin proyek ke direktori sementara, mengisi semua token di
-   content.config.json dengan nilai contoh, lalu memverifikasi:
-
-     1. Tidak ada satu pun placeholder yang tersisa di halaman
-     2. Judul & meta berubah sesuai config
-     3. Hitung mundur aktif dan menghitung ke depan
-     4. Foto asli (JPG) menggantikan ilustrasi bila file-nya ada
-     5. Penanda "belum diisi" hilang total
-     6. Foto hilang -> otomatis kembali ke ilustrasi
-
-   Ini membuktikan jalur konfigurasi terpusat bekerja end-to-end.
-   Jalankan: node tests/filled.test.mjs
+   Skrip ini menyalin proyek ke direktori sementara, mengganti nilai di
+   content.config.json (nama, sapaan, judul lagu), membangun ulang,
+   lalu memverifikasi di browser sungguhan bahwa:
+     - nilai terpusat benar-benar tampil di halaman
+     - audio mengikuti judul lagu dari config
+     - tanpa penanda placeholder tersisa
+   Membuktikan "sumber tunggal = content.config.json" bukan sekadar
+   klaim: ganti config, halaman ikut berubah.
    ===================================================================== */
 
 import { chromium } from 'playwright-core';
 import { startServer } from '../tools/static-server.mjs';
-import { mkdtempSync, cpSync, readFileSync, writeFileSync, existsSync, rmSync } from 'node:fs';
+import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -29,10 +25,10 @@ let pass = 0;
 const failures = [];
 function check(name, cond, detail = '') {
   if (cond) { pass++; console.log(`  PASS  ${name}${detail ? '  — ' + detail : ''}`); }
-  else { failures.push(`${name}: ${detail}`); console.log(`  FAIL  ${name}  — ${detail}`); }
+  else { failures.push(`${name}: ${detail}`); console.log(`  x ${name}  —  ${detail}`); }
 }
 
-/* ---------- 1. Salin proyek ke temp & isi semua nilai ---------- */
+/* ---------- 1. Salin proyek ke temp & isi nilai nyata ---------- */
 const TMP = mkdtempSync(join(tmpdir(), 'evel-filled-'));
 cpSync(ROOT, TMP, {
   recursive: true,
@@ -42,69 +38,50 @@ cpSync(ROOT, TMP, {
 const cfgPath = join(TMP, 'content.config.json');
 const cfg = JSON.parse(readFileSync(cfgPath, 'utf8'));
 
+/* Nilai nyata yang berbeda dari bawaan — supaya perubahan terlihat jelas */
 Object.assign(cfg.values, {
-  'Nama Pasangan': 'Budi Santoso',
-  'Tanggal Pernikahan': '12 Juni 1996',
-  'Lokasi Pernikahan': 'Gedung Serbaguna Bunga Melati, Malang',
-  'Tanggal Perayaan': '8 Juni 2026',
-  'Lokasi Perayaan': 'Kafe Reid, Malang',
-  'Kota Domisili': 'Malang',
-  'Nama Anak 1': 'Alya',
-  'Nama Anak 2': 'Rafi',
-  'Nama Anak 3': 'Nadia',
-  'Nama Orang Tua': 'Bapak Hendra & Ibu Sri',
-  'Nama Keponakan': 'Bagas',
-  'Nama Penyusun': 'Keluarga Besar',
-  'Deskripsi Foto 1': 'Budi dan pasangannya tersenyum di depan taman bunga',
-  'Deskripsi Foto 2': 'Kedua tangan terkunci bergandengan',
-  'Deskripsi Foto 3': 'Foto bersama seluruh keluarga di ruang tamu',
-  'Keterangan Foto 1': 'Musim pertama berdua',
-  'Keterangan Foto 2': 'Tetap begitu saja',
-  'Keterangan Foto 3': ''
+  'Nama Anak': 'Alya',
+  'Nama Pasangan': 'Bapak Hendra & Ibu Sri'
 });
-
-// hitung mundur ke tanggal yang pasti masih di depan
-const future = new Date(Date.now() + 45 * 86400000).toISOString().slice(0, 10);
-cfg.settings.countdownTarget = future;
-
+cfg.hero.h1 = 'Untuk Ayah & Ibu Tercinta';
+cfg.kartu.salutation = 'Ayah, Ibu yang kusayang,';
+cfg.settings.audio = {
+  ...cfg.settings.audio,
+  title: 'Lagu Uji Coba',
+  artist: 'Penyanyi Uji'
+};
 writeFileSync(cfgPath, JSON.stringify(cfg, null, 2), 'utf8');
 
-/* ---------- 2. Buat dua "foto asli" JPG sungguhan ---------- */
-/* JPEG 1x1 yang valid, ditulis sebagai biner agar benar-benar(file) foto. */
-const JPEG_1PX = Buffer.from(
-  '/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a' +
-  'HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/wAALCAABAAEBAREA/8QAFAABAAAAAAAA' +
-  'AAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAD8AKp//2Q==', 'base64');
-writeFileSync(join(TMP, 'assets/foto-1.jpg'), JPEG_1PX);
-writeFileSync(join(TMP, 'assets/foto-2.jpg'), JPEG_1PX);
-// foto-3 sengaja TIDAK dibuat -> harus jatuh ke ilustrasi
-
-/* ---------- 3. Bangun ulang ---------- */
-const { execFileSync } = await import('node:child_process');
+/* ---------- 2. Bangun ulang ---------- */
 execFileSync('node', [join(TMP, 'tools/build-content.mjs')], { stdio: 'pipe' });
 
 const builtHtml = readFileSync(join(TMP, 'index.html'), 'utf8');
-console.log('\n=== Bangunan dari config berisi nilai ===');
-check('build-content berhasil tanpa error', true, 'exit 0');
-check('index.html tidak lagi memuat token kosong',
-  !/\[(Nama|Tanggal|Lokasi|Kota)[^\]]*\]/.test(builtHtml),
-  'nol placeholder tersisa');
-check('foto-1 & foto-2 memakai file JPG asli',
-  builtHtml.includes('assets/foto-1.jpg') && builtHtml.includes('assets/foto-2.jpg'),
-  'src terisi foto asli');
-check('foto-3 (belum ada) memakai ilustrasi fallback',
-  builtHtml.includes('assets/img/placeholder-3.svg'), 'fallback terpasang');
+
+/* ---------- 3. Verifikasi hasil generasi (statis) ---------- */
+console.log('\n=== Generasi dari config terisi ===');
+check('h1 mengikuti config baru',
+  builtHtml.includes('Untuk Ayah &amp; Ibu Tercinta'), 'hero.h1 diganti (ter-escape HTML)');
+check('salutation kartu mengikuti config',
+  builtHtml.includes('Ayah, Ibu yang kusayang,'), 'kartu.salutation diganti');
+check('judul lagu tampil di player',
+  builtHtml.includes('Lagu Uji Coba'), 'audio.title diganti');
+check('artis lagu tampil di player',
+  builtHtml.includes('Penyanyi Uji'), 'audio.artist diganti');
+check('audio src tetap menunjuk file lagu',
+  builtHtml.includes('src="assets/audio/mutiara-cinta-kita.mp3"'), 'audio src benar');
+check('angka anniversary tampil',
+  builtHtml.includes('>30<'), 'angka 30 ada');
 check('tidak ada penanda mark.todo lagi',
   !builtHtml.includes('mark class="todo"'), 'nol penanda');
-check('judul memakai nama nyata',
-  builtHtml.includes('<title>30 Tahun Pernikahan — Budi Santoso</title>'),
-  readFileSync(join(TMP, 'index.html'), 'utf8').match(/<title>[^<]*<\/title>/)[0]);
+check('lirik tetap utuh (8 stanza)',
+  (builtHtml.match(/lyric__stanza/g) || []).length >= 8,
+    `${(builtHtml.match(/lyric__stanza/g) || []).length} kemunculan`);
 
 /* ---------- 4. Uji di browser ---------- */
 const server = await startServer(TMP, 0);
 const browser = await chromium.launch({
   executablePath: '/usr/bin/chromium',
-  args: ['--no-sandbox', '--disable-dev-shm-usage']
+  args: ['--no-sandbox', '--disable-dev-shm-usage', '--autoplay-policy=no-user-gesture-required']
 });
 
 try {
@@ -116,122 +93,67 @@ try {
   page.on('pageerror', e => pageErrors.push(e.message));
 
   await page.goto(`${server.origin}/index.html`, { waitUntil: 'networkidle' });
-  // gambar ke-2 & ke-3 memakai loading="lazy" — harus digulir dulu agar termuat
-  await page.evaluate(() => document.getElementById('galeri').scrollIntoView());
-  await page.waitForTimeout(500);
-  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-  await page.waitForTimeout(500);
 
   console.log('\n=== Halaman dengan nilai nyata ===');
 
   const live = await page.evaluate(() => {
+    const audio = document.getElementById('bg-audio');
     const body = document.body.innerText;
     return {
+      h1: document.querySelector('h1')?.textContent,
       title: document.title,
-      desc: document.querySelector('meta[name="description"]')?.content,
-      leftoverTokens: body.match(/\[[A-Za-z][^\]]{2,40}\]/g) || [],
+      salutation: document.querySelector('.card__salutation')?.textContent,
+      playerNote: document.querySelector('.player__note')?.textContent,
+      playerArtist: document.querySelector('.player__artist')?.textContent,
+      audioSrc: audio?.getAttribute('src'),
+      stanzas: document.querySelectorAll('.lyric__stanza').length,
       todoMarks: document.querySelectorAll('mark.todo').length,
-      h1: document.querySelector('h1')?.textContent.trim(),
-      countdownVisible: !document.getElementById('countdown').hidden,
-      cdDays: document.getElementById('cd-days').textContent,
-      cdHours: document.getElementById('cd-hours').textContent,
-      images: Array.from(document.querySelectorAll('.gallery__item img')).map(i => ({
-        src: i.getAttribute('src'), natural: i.naturalWidth, alt: i.getAttribute('alt')
-      })),
-      captions: Array.from(document.querySelectorAll('.gallery__caption')).map(c => c.textContent.trim()),
-      wishes: Array.from(document.querySelectorAll('.wish__from')).map(w => w.textContent.trim()),
-      footer: document.querySelector('.footer__credit').textContent.trim(),
-      // nilai yang di-substitusi runtime oleh main.js
-      runtimeFilled: body.includes('Budi Santoso')
+      leftoverTokens: body.match(/\[[A-Za-z][^\]]{2,40}\]/g) || []
     };
   });
 
-  check('judul dokumen memakai nama pasangan', live.title === '30 Tahun Pernikahan — Budi Santoso', live.title);
-  check('meta description terisi nama & tanggal',
-    live.desc.includes('Budi Santoso') && live.desc.includes('12 Juni 1996'),
-    live.desc.slice(0, 60) + '...');
-  check('nol placeholder tersisa di halaman', live.leftoverTokens.length === 0,
-    live.leftoverTokens.join(', ') || 'bersih');
-  check('nol penanda "belum diisi"', live.todoMarks === 0, `${live.todoMarks} penanda`);
-  check('H1 memakai nama nyata', live.h1.includes('Budi Santoso') && live.h1.includes('Tiga Pulas Tahun'),
-    `"${live.h1}"`);
-  check('5 kartu ucapan muncul setelah semua nama diisi', live.wishes.length === 5,
-    live.wishes.join(', '));
-  check('kredit footer memakai Nama Penyusun', live.footer.includes('Keluarga Besar'), live.footer);
-
-  check('hitung mundur aktif', live.countdownVisible, `visible=${live.countdownVisible}`);
-  const days = Number(live.cdDays);
-  check('hitung mundur menghitung ke depan (bukan 0 atau negatif)',
-    days >= 43 && days <= 45, `${days} hari (target ${future}) -> ${live.cdHours} jam`);
-
-  check('foto-1 & foto-2 benar-benar dimuat (naturalWidth > 0)',
-    live.images[0].natural > 0 && live.images[1].natural > 0,
-    live.images.map(i => `${i.src}=${i.natural}px`).join(', '));
-  check('foto-1 & foto-2 memakai JPG',
-    live.images[0].src.endsWith('foto-1.jpg') && live.images[1].src.endsWith('foto-2.jpg'),
-    live.images.map(i => i.src).join(', '));
-  check('foto-3 jatuh ke ilustrasi (karena JPG-nya belum ada)',
-    live.images[2].src.endsWith('placeholder-3.svg') && live.images[2].natural > 0,
-    `${live.images[2].src} naturalWidth=${live.images[2].natural}`);
-
-  // alt foto asli memakai nilai yang diisi, bukan nama file
-  check('alt foto asli terisi deskripsi nyata',
-    live.images[0].alt.includes('taman bunga') && live.images[1].alt.includes('bergandengan'),
-    live.images.map(i => `"${i.alt}"`).join(' | '));
-
-  // caption yang diisi tampil; yang dikosongkan dihapus, bukan dibiarkan kosong
-  check('caption yang diisi tampil', live.captions.includes('Musim pertama berdua'),
-    live.captions.join(' | '));
-  check('caption kosong dihapus, tidak ada placeholder tertinggal',
-    live.captions.length === 3 && !live.captions.some(c => /\[[^\]]+\]/.test(c)),
-    `${live.captions.length} caption: ${live.captions.join(' | ')}`);
+  check('h1 live mengikuti config',
+    live.h1 === 'Untuk Ayah & Ibu Tercinta', live.h1);
+  check('salutation live mengikuti config',
+    live.salutation === 'Ayah, Ibu yang kusayang,', live.salutation);
+  check('player menampilkan judul dari config',
+    live.playerNote === 'Lagu Uji Coba', live.playerNote);
+  check('player menampilkan artis dari config',
+    (live.playerArtist || '').includes('Penyanyi Uji'), live.playerArtist);
+  check('audio live menunjuk file lagu',
+    live.audioSrc === 'assets/audio/mutiara-cinta-kita.mp3', live.audioSrc);
+  check('lirik live utuh',
+    live.stanzas === 8, `${live.stanzas} stanza`);
+  check('nol placeholder tampil live',
+    live.todoMarks === 0 && live.leftoverTokens.length === 0,
+    `${live.todoMarks} penanda, ${live.leftoverTokens.length} token`);
 
   check('tanpa error konsol', consoleErrors.length === 0, consoleErrors.join(' | ') || 'bersih');
   check('tanpa uncaught exception', pageErrors.length === 0, pageErrors.join(' | ') || 'bersih');
 
-  /* ---------- 5. Skenario: file foto ada tapi rusak/404 saat runtime ---------- */
-  console.log('\n=== Skenario kegagalan foto ===');
+  /* ---------- 5. Skenario: audio gagal dimuat (404) ---------- */
+  console.log('\n=== Skenario kegagalan audio ===');
   const brokenPage = await ctx.newPage();
-  await brokenPage.route('**/assets/foto-1.jpg', route => route.abort());
   const bErrors = [];
-  brokenPage.on('console', m => { if (m.type() === 'error') bErrors.push(m.text()); });
+  brokenPage.on('pageerror', e => bErrors.push(e.message));
+  await brokenPage.route('**/assets/audio/mutiara-cinta-kita.mp3', route => route.abort());
   await brokenPage.goto(`${server.origin}/index.html`, { waitUntil: 'load' });
-  await brokenPage.evaluate(() => document.getElementById('galeri').scrollIntoView());
-  await brokenPage.waitForTimeout(800);
+  await brokenPage.waitForTimeout(600);
 
-  const afterFail = await brokenPage.locator('.gallery__item img').first().evaluate(el => ({
-    src: el.getAttribute('src'), natural: el.naturalWidth
-  }));
-  check('foto gagal dimuat -> otomatis kembali ke ilustrasi',
-    afterFail.src.endsWith('placeholder-1.svg') && afterFail.natural > 0,
-    `src=${afterFail.src} naturalWidth=${afterFail.natural}`);
-
-  /* ---------- 6. Countdown lewat / tidak valid ---------- */
-  console.log('\n=== Ketahanan konfigurasi ===');
-  const badPage = await ctx.newPage();
-  await badPage.addInitScript(() => {
-    // rusak sengaja: countdownTarget bukan tanggal
-    Object.defineProperty(window, 'SITE_CONFIG', {
-      configurable: true,
-      set(v) { this.__cfg = v; },
-      get() {
-        const c = this.__cfg || {};
-        return { ...c, settings: { ...(c.settings || {}), countdownTarget: 'bukan-tanggal' } };
-      }
-    });
+  const badState = await brokenPage.evaluate(() => {
+    const btn = document.getElementById('audio-toggle');
+    return {
+      btnExists: !!btn,
+      pressed: btn?.getAttribute('aria-pressed') || null,
+      pageReadable: document.body.innerText.includes('mutiara indah')
+    };
   });
-  const badErrors = [];
-  badPage.on('pageerror', e => badErrors.push(e.message));
-  await badPage.goto(`${server.origin}/index.html`, { waitUntil: 'load' });
-  const badState = await badPage.evaluate(() => ({
-    hidden: document.getElementById('countdown').hidden,
-    text: document.body.innerText.includes('Budi Santoso')
-  }));
-  check('countdownTarget tidak valid -> countdown dimatikan, halaman utuh',
-    badState.hidden === true && badState.text === true,
-    `hidden=${badState.hidden} teks tetap ada=${badState.text}`);
-  check('tidak ada exception dari countdown tidak valid', badErrors.length === 0,
-    badErrors.join(' | ') || 'bersih');
+  check('audio gagal: halaman tetap terbaca penuh', badState.pageReadable === true,
+    'naskah tidak bergantung pada lagu');
+  check('audio gagal: tombol tetap ada (tidak error fatal)',
+    badState.btnExists === true, 'tombol ada');
+  check('audio gagal: tidak ada exception', bErrors.length === 0,
+    bErrors.join(' | ') || 'bersih');
 
   await ctx.close();
 } finally {

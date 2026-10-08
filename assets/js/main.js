@@ -2,18 +2,18 @@
    main.js — vanilla, tanpa dependensi
    ---------------------------------------------------------------------
    index.html sudah berisi SELURUH naskah, jadi halaman tetap terbaca
-   tanpa JavaScript. File ini hanya menambah lapisan konfigurasi:
+   tanpa JavaScript. File ini menambahkan:
 
-     1. Substitusi token [Nama ...] dengan nilai dari content.config.json
-        (runtime) — hasil bangun tools/build-content.mjs sudah substituting,
-        ini jaring pengaman bila config berubah tanpa bangun ulang.
-     2. Penghitung mundur bila settings.countdownTarget diisi.
-     3. Foto galeri: otomatis kembali ke ilustrasi bila file foto 404.
-     4. Muncul saat digulir, hormat prefers-reduced-motion.
-     5. Penanda section aktif di navigasi.
+     1. Inisialisasi pemutar lagu "Mutiara Cinta Kita"
+        - Coba autoplay saat halaman dibuka; bila diblokir kebijakan
+          browser, lagu mulai otomatis pada interaksi pertama
+          (klik / gulir / sentuh / tombol).
+     2. Pengganti token [Nama ...] bila runtime membawa nilai baru.
+     3. Reveal animasi section saat digulir (hormat reduced-motion).
+     4. Section aktif di navigasi (scroll-spy).
 
-   Prinsip: kalau JavaScript gagal, halaman tetap utuh dan terbaca.
-   Semua error ditangkap; tidak ada yang mematikan halaman.
+   Lirik ditampilkan sebagai teks utuh (tidak karaoke per baris) —
+   bisa dibaca sambil mendengarkan.
    ===================================================================== */
 
 (function () {
@@ -29,13 +29,9 @@
 
   var TOKEN_RE = /\[([A-Za-z][A-Za-z0-9 .&-]{2,40})\]/g;
 
-  /* ---------- 1. Substitusi token ---------- */
-  function looksLikeToken(name) {
-    if (name.indexOf("http") !== -1) return false;
-    return true;
-  }
-
+  /* ---------- 1. Substitusi token runtime ---------- */
   function fillTokens(root) {
+    if (!Object.keys(VALUES).length) return;
     var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
       acceptNode: function (node) {
         TOKEN_RE.lastIndex = 0;
@@ -46,24 +42,17 @@
         return NodeFilter.FILTER_ACCEPT;
       }
     });
-
     var nodes = [];
     while (walker.nextNode()) nodes.push(walker.currentNode);
 
-    var replaced = 0;
-    nodes.forEach(function (node) {
-      node.nodeValue = node.nodeValue.replace(TOKEN_RE, function (whole, name) {
-        var key = name.trim();
-        if (!looksLikeToken(key)) return whole;
-        var value = VALUES[key];
-        if (value === undefined || value === null || value === "") return whole;
-        // Jangan isi dengan nilai yang masih berupa token itu sendiri.
-        if (value.trim() === whole) return whole;
-        replaced++;
+    nodes.forEach(function (n) {
+      TOKEN_RE.lastIndex = 0;
+      n.nodeValue = n.nodeValue.replace(TOKEN_RE, function (whole, name) {
+        var value = VALUES[name];
+        if (value === undefined || value.trim() === whole) return whole;
         return value;
       });
     });
-    return replaced;
   }
 
   function clearTodoMarks() {
@@ -87,7 +76,6 @@
       ['meta[property="og:title"]', CFG.meta.ogTitle],
       ['meta[property="og:description"]', CFG.meta.ogDescription]
     ];
-
     pairs.forEach(function (pair) {
       var el = document.querySelector(pair[0]);
       if (el && pair[1]) el.setAttribute("content", pair[1]);
@@ -102,103 +90,94 @@
     }
   }
 
-  /* ---------- 3. Penghitung mundur ---------- */
-  function pad(n) { return n < 10 ? "0" + n : String(n); }
+  /* ---------- 3. Pemutar lagu ---------- */
+  function initAudio() {
+    var AU = SET.audio;
+    if (!AU || !AU.src) return;
 
-  function initCountdown() {
-    if (!SET.countdownTarget) return;
+    var btn = document.getElementById("audio-toggle");
+    var audio = document.getElementById("bg-audio");
+    if (!btn || !audio) return;
+    var stateEl = btn.querySelector(".player__state");
+    var iconEl = btn.querySelector(".player__icon");
 
-    var target = new Date(SET.countdownTarget + "T00:00:00");
-    if (isNaN(target.getTime())) {
-      if (window.console) console.warn("main.js: countdownTarget tidak valid — hitung mundur dimatikan.");
-      return;
+    var started = false;   // pernah berbunyi
+    var armed = false;     // listener interaksi pertama terpasang
+
+    function setPlaying(playing) {
+      btn.setAttribute("aria-pressed", playing ? "true" : "false");
+      if (stateEl) stateEl.textContent = playing ? "Jeda lagu" : "Putar lagu";
+      if (iconEl) {
+        iconEl.classList.toggle("player__icon--pause", playing);
+        iconEl.classList.toggle("player__icon--play", !playing);
+      }
     }
 
-    var box = document.getElementById("countdown");
-    var days = document.getElementById("cd-days");
-    var hours = document.getElementById("cd-hours");
-    var minutes = document.getElementById("cd-minutes");
-    if (!box || !days || !hours || !minutes) return;
+    function kick() {
+      if (!started && audio.paused) tryPlay();
+    }
 
-    var timer = null;
+    function disarm() {
+      started = true;
+      ["pointerdown", "keydown", "wheel", "touchstart"].forEach(function (evt) {
+        window.removeEventListener(evt, kick);
+      });
+    }
 
-    var tick = function () {
-      var diff = target.getTime() - Date.now();
+    function arm() {
+      if (armed) return;
+      armed = true;
+      ["pointerdown", "keydown", "wheel", "touchstart"].forEach(function (evt) {
+        window.addEventListener(evt, kick, { passive: true });
+      });
+    }
 
-      if (diff <= 0) {
-        days.textContent = "0";
-        hours.textContent = "00";
-        minutes.textContent = "00";
-        box.hidden = false;
-        if (timer) clearInterval(timer);
-        return;
+    function tryPlay() {
+      audio.play().then(function () {
+        setPlaying(true);
+        disarm();
+      }).catch(function () {
+        // Ditolak kebijakan autoplay — pasang pemicu interaksi pertama.
+        setPlaying(false);
+        arm();
+      });
+    }
+
+    btn.addEventListener("click", function () {
+      if (audio.paused) {
+        tryPlay();
+      } else {
+        audio.pause();
+        setPlaying(false);
       }
-
-      var minsTotal = Math.floor(diff / 60000);
-      days.textContent = String(Math.floor(minsTotal / 1440));
-      hours.textContent = pad(Math.floor((minsTotal % 1440) / 60));
-      minutes.textContent = pad(minsTotal % 60);
-      box.hidden = false;
-    };
-
-    timer = setInterval(tick, 30000);
-    tick();
-  }
-
-  /* ---------- 4. Galeri: ganti foto bila gagal dimuat ---------- */
-  function initGalleryFallback() {
-    var images = document.querySelectorAll(".gallery__item img[data-fallback]");
-
-    var useFallback = function (img) {
-      var fallback = img.getAttribute("data-fallback");
-      if (!fallback) return false;
-      // jangan berputar tanpa henti kalau fallback pun gagal
-      if (img.src.indexOf(fallback) !== -1) return false;
-      img.src = fallback;
-      img.classList.add("gallery__item--fallback");
-      return true;
-    };
-
-    Array.prototype.forEach.call(images, function (img) {
-      img.addEventListener("error", function () { useFallback(img); }, { once: true });
-
-      // Gambar yang dimuat eager bisa sudah GAGAL sebelum listener dipasang
-      // (mis. foto asli belum ada). Periksa kondisi saat ini juga, kalau tidak
-      // placeholder tidak akan pernah muncul.
-      if (img.complete && img.naturalWidth === 0) useFallback(img);
     });
+
+    // Saat situs dibuka: coba putar lagu.
+    tryPlay();
   }
 
-  /* ---------- 5. Muncul saat digulir ---------- */
+  /* ---------- 4. Reveal saat digulir ---------- */
   function initReveal() {
-    var targets = document.querySelectorAll(
-      ".timeline__item, .gallery__item, .wish, .quote"
-    );
+    var targets = document.querySelectorAll(".reveal");
     if (!targets.length) return;
-
     if (reduceMotion || !("IntersectionObserver" in window)) {
       Array.prototype.forEach.call(targets, function (el) {
         el.classList.add("is-visible");
       });
       return;
     }
-
-    Array.prototype.forEach.call(targets, function (el) {
-      el.classList.add("reveal");
-    });
-
     var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add("is-visible");
-        io.unobserve(entry.target);
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add("is-visible");
+          io.unobserve(e.target);
+        }
       });
-    }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
-
+    }, { threshold: 0.12 });
     Array.prototype.forEach.call(targets, function (el) { io.observe(el); });
   }
 
-  /* ---------- 6. Section aktif di navigasi ---------- */
+  /* ---------- 5. Section aktif di navigasi ---------- */
   function initScrollSpy() {
     var links = Array.prototype.slice.call(
       document.querySelectorAll(".nav__list a[href^='#']"));
@@ -221,14 +200,13 @@
     Array.prototype.forEach.call(sections, function (s) { spy.observe(s); });
   }
 
-  /* ---------- 7. Jalankan ---------- */
+  /* ---------- 6. Jalankan ---------- */
   function init() {
     try {
       fillTokens(document.body);
       clearTodoMarks();
       applyMeta();
-      initGalleryFallback();
-      initCountdown();
+      initAudio();
       initReveal();
       initScrollSpy();
     } catch (err) {

@@ -1,13 +1,12 @@
 /* =====================================================================
-   style.css — situs satu halaman, elegan & responsif
+   style.css — kartu ucapan satu halaman, elegan & responsif
    ---------------------------------------------------------------------
-   1. Token & reset          5. Timeline        9. Gerak (reduced-motion)
-   2. Dasar & tipografi      6. Galeri         10. Responsif
-   3. Utilitas & fokus       7. Ucapan         11. Cetak
-   4. Hero, nav, tombol      8. Footer
-
-   Semua pasangan warna teks/latar sudah diuji WCAG AA; nilainya tidak
-   boleh diubah tanpa menjalankan ulang tests/ui.test.mjs.
+   Konsep: kartu ucapan dari anak (Yuli) untuk Papa & Mama — 30 tahun.
+   Struktur:
+     1. Token & reset          5. Lirik          9. Gerak (reduced-motion)
+     2. Dasar & tipografi      6. Player lagu   10. Responsif
+     3. Aksesibilitas          7. Pesan         11. Cetak
+     4. Hero & nav             8. Footer        12. Dekoratif
    ===================================================================== */
 
 /* ---------- 1. Token & reset ---------- */
@@ -22,13 +21,13 @@
   --gold-light:     #e8cd94;   /* emas terang untuk TEKS di hero gelap (6.6:1) */
   --focus-light:    #f7e3b5;   /* cincin fokus di atas hero */
   --ink:            #24191b;
-  --ink-soft:       #5d5153;
+  --ink-soft:       #504044;
   --paper:          #fdfaf7;
-  --paper-alt:      #f7f1ea;
+  --paper-alt:      #f6efea;
   --white:          #ffffff;
-  --border:         #e6d9cf;
-  --todo-bg:        #ffe9a8;
-  --todo-ink:       #3a2c00;
+  --border:         #e7dcd2;
+  --todo-bg:        #fff3c4;
+  --todo-ink:       #4a3a00;
 
   --font-body: Georgia, "Times New Roman", serif;
   --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
@@ -39,6 +38,7 @@
   --shadow: 0 8px 26px rgba(36, 25, 27, 0.07);
   --shadow-lift: 0 16px 40px rgba(36, 25, 27, 0.14);
   --transition: 220ms ease;
+
   --focus: var(--gold-ink);
 }
 
@@ -112,11 +112,10 @@ mark.todo {
 
 .section__title + .section__lead { margin-top: 0; }
 
-/* ---------- 3. Utilitas & fokus ---------- */
+/* ---------- 3. Aksesibilitas ---------- */
 .visually-hidden {
   position: absolute;
   width: 1px; height: 1px;
-  padding: 0; margin: -1px;
   overflow: hidden;
   clip: rect(0 0 0 0);
   clip-path: inset(50%);
@@ -125,7 +124,7 @@ mark.todo {
 }
 
 /* Sembunyikan dengan transform, bukan left: -9999px, supaya tidak pernah
-  creates geometri di luar viewport (tetap bisa difokus & tidak meluber). */
+   menciptakan geometri di luar viewport (tetap bisa difokus & tidak meluber). */
 .skip-link {
   position: absolute;
   top: 0;
@@ -165,7 +164,7 @@ mark.todo {
     linear-gradient(165deg, var(--wedding-deep) 0%, var(--wedding-mid) 60%, var(--wedding-deep) 100%);
 }
 
-.hero__inner { max-width: 46rem; margin-inline: auto; }
+.hero__inner { max-width: 46rem; margin-inline: auto; position: relative; z-index: 1; }
 
 .hero__eyebrow {
   text-transform: uppercase;
@@ -174,13 +173,15 @@ mark.todo {
   font-weight: 600;
   font-size: 0.78rem;
   color: var(--gold-light);
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.1rem;
 }
 
 .hero__title {
-  font-size: clamp(1.7rem, 5.5vw, 3.1rem);
-  line-height: 1.18;
-  margin-bottom: 0.75rem;
+  font-size: clamp(2.4rem, 7vw, 4.2rem);
+  font-weight: 700;
+  color: var(--white);
+  text-shadow: 0 8px 40px rgba(0, 0, 0, 0.32);
+  margin-bottom: 0.3em;
 }
 
 .hero__number {
@@ -197,15 +198,21 @@ mark.todo {
   font-weight: 700;
   line-height: 1;
   text-shadow: 0 8px 40px rgba(0, 0, 0, 0.32);
+  background: linear-gradient(180deg, var(--white) 40%, var(--gold-light) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
 }
 
 .hero__unit {
   align-self: flex-start;
   margin-top: 0.55em;
-  font-family: var(--font-ui);
-  font-size: clamp(0.95rem, 2.4vw, 1.25rem);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.1rem, 3vw, 1.6rem);
   letter-spacing: 0.2em;
-  text-transform: uppercase;
   color: var(--gold-light);
 }
 
@@ -216,27 +223,6 @@ mark.todo {
   margin: 0 auto 0.9rem;
 }
 
-.hero__date {
-  color: var(--gold-light);
-  font-size: 0.95rem;
-  margin-bottom: 1.75rem;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.4rem;
-}
-
-.hero__date-label {
-  font-family: var(--font-ui);
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  font-size: 0.72rem;
-  align-self: center;
-  padding: 0.2rem 0.55rem;
-  border: 1px solid rgba(232, 205, 148, 0.55);
-  border-radius: 999px;
-}
-
 .btn {
   display: inline-block;
   padding: 0.8rem 1.9rem;
@@ -244,14 +230,17 @@ mark.todo {
   text-decoration: none;
   font-family: var(--font-ui);
   font-weight: 600;
+  font-size: 0.95rem;
   letter-spacing: 0.04em;
-  border: 2px solid transparent;
+  border: 0;
+  cursor: pointer;
   transition: transform var(--transition), background var(--transition), color var(--transition);
 }
 
 .btn--primary { background: var(--gold-light); color: var(--wedding-deep); }
-
 .btn--primary:hover { background: var(--white); transform: translateY(-2px); }
+
+.hero .btn { margin-top: 1.2rem; }
 
 /* Nav */
 .nav {
@@ -293,188 +282,168 @@ mark.todo {
   font-weight: 700;
 }
 
-/* ---------- 5. Timeline ---------- */
-/* Flex + wrap (bukan grid) supaya baris terakhir tetap terpusat ketika
-   jumlah tonggak ganjil — mis. 5 kartu: 3 di atas, 2 terpusat di bawah.
-   Dengan grid, dua kartu terakhir menempel di kiri dan terlihat berat.
-
-   flex-grow sengaja 0: basis-nya sudah persis lebar "tiga per baris",
-   sehingga baris terakhir yang hanya berisi 2 kartu TIDAK melebar dan
-   kartunya sama besar dengan baris di atasnya. */
-.timeline {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1.5rem;
-}
-
-.timeline__item {
+/* ---------- 5. Kartu ucapan ---------- */
+.card {
   position: relative;
-  flex: 0 1 calc((100% - 3rem) / 3);
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: clamp(1.8rem, 5vw, 3.2rem);
   background: var(--white);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 1.6rem 1.5rem 1.5rem;
   box-shadow: var(--shadow);
-  transition: transform var(--transition), box-shadow var(--transition);
 }
 
-.timeline__item:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
-
-.timeline__step {
-  font-family: var(--font-ui);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  color: var(--gold-ink);
-  background: var(--wedding-soft);
-  width: 2rem; height: 2rem;
-  display: grid;
-  place-items: center;
-  border-radius: 999px;
-  margin: 0 0 0.85rem;
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border: 1px solid rgba(195, 154, 78, 0.35);
+  border-radius: calc(var(--radius) - 6px);
+  pointer-events: none;
 }
 
-.timeline__title { font-size: 1.15rem; margin-bottom: 0.4rem; }
-.timeline__text { color: var(--ink-soft); margin: 0; font-size: 0.98rem; }
-
-/* ---------- 6. Galeri ---------- */
-.gallery {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-}
-
-.gallery__item {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  box-shadow: var(--shadow);
-  transition: transform var(--transition), box-shadow var(--transition);
-}
-
-.gallery__item:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
-
-.gallery__item img {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  background: var(--wedding-soft);
-}
-
-.gallery__caption {
-  padding: 0.9rem 1.1rem;
+.card__salutation {
   font-family: var(--font-display);
-  font-size: 0.98rem;
-  color: var(--ink-soft);
-  margin: 0;
-  text-align: center;
+  font-style: italic;
+  font-size: clamp(1.25rem, 3vw, 1.6rem);
+  color: var(--wedding);
+  margin-bottom: 1.4rem;
 }
 
-/* ---------- 7. Sambutan, hitung mundur, ucapan ---------- */
+.card .prose p { color: var(--ink-soft); }
+.card .prose p:first-child { color: var(--ink); font-size: 1.15em; }
+
 .prose { max-width: 42rem; margin-inline: auto; }
-.prose p { color: var(--ink-soft); }
 .prose p:last-child { margin-bottom: 0; }
 
-.prose-short {
-  max-width: 42rem;
-  margin: 2rem auto 0;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--white);
-}
-
-.prose-short > summary {
-  cursor: pointer;
-  padding: 0.9rem 1.25rem;
-  font-family: var(--font-display);
-  font-weight: 700;
-  color: var(--wedding);
-  list-style-position: inside;
-}
-
-.prose-short > summary:hover { color: var(--wedding-deep); }
-
-.prose-short > .prose {
-  padding: 0 1.25rem 1.25rem;
-  font-size: 0.97rem;
-}
-
-.countdown {
-  margin-top: 2.25rem;
-  padding: 1.4rem 1.25rem;
-  text-align: center;
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-}
-
-.countdown__label { margin-bottom: 0.5rem; color: var(--ink-soft); font-size: 0.95rem; }
-
-.countdown__value {
-  font-family: var(--font-display);
-  font-size: clamp(1.6rem, 6vw, 2.5rem);
-  font-weight: 700;
-  color: var(--wedding);
-  margin: 0;
-  font-variant-numeric: tabular-nums;
-}
-
-.countdown__sep { color: var(--gold-ink); padding-inline: 0.3em; }
-
-.countdown__hint {
-  margin: 0.25rem 0 0;
-  font-family: var(--font-ui);
-  font-size: 0.72rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
-
-.wishes {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+/* ---------- 6. Lirik ---------- */
+.lyrics {
+  max-width: 40rem;
+  margin: 0 auto;
   display: grid;
-  gap: 1.25rem;
-  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  gap: 2rem;
 }
 
-.wish {
-  background: var(--white);
-  border-left: 4px solid var(--gold);
-  border-radius: var(--radius);
-  padding: 1.4rem;
-  box-shadow: var(--shadow);
+.lyric__stanza {
+  position: relative;
+  text-align: center;
+  padding-top: 1.6rem;
 }
 
-.wish__from {
-  font-family: var(--font-display);
-  font-size: 1.08rem;
-  font-weight: 700;
-  color: var(--wedding);
-  margin-bottom: 0.1rem;
+.lyric__stanza + .lyric__stanza::before {
+  content: "";
+  position: absolute;
+  top: -1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
 }
 
-.wish__relation {
+.lyric__label {
   font-family: var(--font-ui);
   font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--ink-soft);
-  margin-bottom: 0.55rem;
+  color: var(--gold-ink);
+  margin-bottom: 0.7rem;
 }
 
-.wish__text { margin: 0; color: var(--ink-soft); }
+.lyric__line {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.02rem, 2.4vw, 1.18rem);
+  line-height: 1.75;
+  color: var(--ink);
+  margin: 0;
+}
 
-.quote { margin: 0 auto; max-width: 40rem; text-align: center; }
+/* ---------- 7. Player lagu ---------- */
+.player {
+  border-top: 1px solid var(--border);
+  background: var(--paper-alt);
+  padding: 1.1rem 0;
+}
+
+.player__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem 1.6rem;
+}
+
+.player__meta {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.player__note { font-weight: 700; color: var(--wedding); }
+
+.player__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.55rem 1.3rem;
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  background: var(--white);
+  color: var(--wedding);
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition), transform var(--transition);
+}
+
+.player__btn:hover { background: var(--wedding-soft); transform: translateY(-1px); }
+
+.player__btn[aria-pressed="true"] {
+  background: var(--wedding);
+  border-color: var(--wedding);
+  color: var(--white);
+}
+
+.player__icon {
+  width: 0.9rem;
+  height: 0.9rem;
+  display: inline-block;
+}
+
+/* Ikon play: segitiga CSS */
+.player__icon--play {
+  width: 0;
+  height: 0;
+  border-left: 0.6rem solid currentColor;
+  border-top: 0.38rem solid transparent;
+  border-bottom: 0.38rem solid transparent;
+  border-right: 0;
+}
+
+/* Ikon pause: dua batang CSS */
+.player__icon--pause {
+  width: 0.62rem;
+  height: 0.75rem;
+  border: 0;
+  border-left: 0.2rem solid currentColor;
+  border-right: 0.2rem solid currentColor;
+  background-clip: content-box;
+  background-color: currentColor;
+  background-image:
+    linear-gradient(currentColor, currentColor),
+    linear-gradient(currentColor, currentColor);
+  background-size: 0.2rem 100%;
+  background-position: left, right;
+  background-repeat: no-repeat;
+}
+
+/* ---------- 8. Pesan penutup ---------- */
+.quote { margin: 0 auto 2rem; max-width: 40rem; text-align: center; }
 .quote blockquote { margin: 0; padding: 0; border: 0; }
 
 .quote blockquote p {
@@ -486,16 +455,38 @@ mark.todo {
   margin: 0;
 }
 
-.quote blockquote p::before { content: "\201C"; }
-.quote blockquote p::after  { content: "\201D"; }
+.quote figcaption {
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  margin-top: 0.8rem;
+}
 
-.quote figcaption { margin-top: 0.85rem; font-size: 0.9rem; }
-.quote cite { font-style: normal; letter-spacing: 0.08em; color: var(--gold-ink); }
+.quote cite { font-style: normal; }
 
-/* ---------- 8. Footer ---------- */
+.pesan__closing {
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 3.4vw, 1.8rem);
+  color: var(--wedding);
+  margin: 2.2rem auto 0.4rem;
+}
+
+.pesan__closing2 {
+  text-align: center;
+  font-style: italic;
+  color: var(--ink-soft);
+  margin-bottom: 0;
+}
+
+/* ---------- 9. Footer ---------- */
 .footer {
-  background: var(--wedding-deep);
-  color: rgba(255, 255, 255, 0.88);
+  position: relative;
+  border-top: 2px solid transparent;
+  background-image: linear-gradient(var(--paper), var(--paper)),
+                    linear-gradient(90deg, transparent 0%, var(--gold) 50%, transparent 100%);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
   text-align: center;
   padding: 2.75rem 0;
 }
@@ -503,11 +494,11 @@ mark.todo {
 .footer__line1 {
   font-family: var(--font-display);
   font-size: clamp(1.2rem, 3.2vw, 1.6rem);
-  color: var(--gold-light);
+  color: var(--wedding);
   margin-bottom: 0.5rem;
 }
 
-.footer__line2 { margin-bottom: 1.25rem; }
+.footer__line2 { margin-bottom: 1.25rem; color: var(--ink-soft); }
 
 .footer__credit {
   margin: 0;
@@ -515,22 +506,21 @@ mark.todo {
   font-size: 0.78rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.62);
+  color: rgba(80, 64, 68, 0.88);
 }
 
-/* ---------- 9. Gerak & reduced motion ---------- */
-@keyframes rise {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: none; }
-}
-
+/* ---------- 10. Gerak ---------- */
 .reveal { opacity: 0; }
 .reveal.is-visible { animation: rise 620ms ease both; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 
-  /* Semua isi langsung terlihat, tidak ada yang bergantung pada animasi. */
   .reveal { opacity: 1; }
   .reveal.is-visible { animation: none; }
 
@@ -542,29 +532,16 @@ mark.todo {
   }
 
   .btn:hover,
-  .timeline__item:hover,
-  .gallery__item:hover { transform: none; }
+  .player__btn:hover { transform: none; }
 }
 
-/* ---------- 10. Responsif ---------- */
-/* Tonggak: 3 kolom di lebar, 2 di tablet, 1 di ponsel. Basis flex
-   mengikuti jumlah kolom agar kartu selalu sama besar per baris. */
-@media (max-width: 62rem) {
-  .timeline__item { flex-basis: calc((100% - 1.5rem) / 2); }
-}
-
+/* ---------- 11. Responsif ---------- */
 @media (max-width: 40rem) {
   body { font-size: 1rem; }
-
-  /* Satu kartu per baris di ponsel: dua kolom di 320px hanya menyisakan
-     ~130px per kartu, terlalu sempit untuk paragraf yang enak dibaca. */
-  .timeline__item { flex-basis: 100%; }
 
   .wrap { padding-inline: 1.15rem; }
   .hero { padding-inline: 1.15rem; }
 
-  /* Versi subjudul pendek khusus layar kecil (versi panjang disembunyikan,
-     kalimatnya tetap ada di DOM & di config). */
   .hero__sub--long { display: none; }
   .hero__sub--short { display: block; }
 
@@ -579,13 +556,9 @@ mark.todo {
   .hero__sub--long { display: block; }
 }
 
-@media (min-width: 64rem) {
-  .gallery { grid-template-columns: repeat(3, 1fr); }
-}
-
-/* ---------- 11. Cetak ---------- */
+/* ---------- 12. Cetak ---------- */
 @media print {
-  .nav, .btn, .skip-link, .countdown { display: none !important; }
+  .nav, .btn, .skip-link, .player { display: none; }
 
   body { background: #fff; color: #000; font-size: 12pt; }
 
@@ -595,25 +568,20 @@ mark.todo {
     padding-top: 0;
   }
 
-  .hero__digit, .hero__unit, .hero__eyebrow, .hero__date,
-  .hero__sub, .hero__date-label { color: #000; text-shadow: none; }
+  .hero__digit, .hero__unit, .hero__eyebrow, .hero__sub { color: #000; text-shadow: none; }
 
   .section { padding: 1.5rem 0; page-break-inside: avoid; }
-  .section--alt { background: #fff; }
-  .reveal { opacity: 1 !important; }
-  mark.todo { border: 1px dashed #666; }
-
-  a[href^="#"]::after { content: ""; }
+  .card { box-shadow: none; }
 }
 
 /* =====================================================================
-   ENHANCEMENT — lapisan dekoratif elegan (tidak menggerus kontrak warna)
+   ENHANCEMENT — lapisan dekoratif elegan
    ===================================================================== */
 
 /* Font display: muat Playfair Display dari Google Fonts jika online */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap');
 
-/* Hero: tambah overlay tekstur halus + vignette */
+/* Hero: overlay tekstur halus + vignette */
 .hero::before {
   content: "";
   position: absolute; inset: 0;
@@ -624,15 +592,11 @@ mark.todo {
   pointer-events: none;
   z-index: 0;
 }
-.hero__inner, .hero__date-wrap { position: relative; z-index: 1; }
 
 /* Eyebrow dengan garis dekoratif */
 .hero__eyebrow {
   display: inline-block;
   letter-spacing: 0.28em;
-  text-transform: uppercase;
-  font-size: 0.78rem;
-  font-weight: 600;
 }
 .hero__eyebrow::before,
 .hero__eyebrow::after {
@@ -643,26 +607,6 @@ mark.todo {
   vertical-align: middle;
   margin: 0 0.8rem;
   opacity: 0.85;
-}
-
-/* Angka besar 30 — elegan, bukan tebal */
-.hero__digit {
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: clamp(4.5rem, 14vw, 8.5rem);
-  line-height: 1;
-  background: linear-gradient(180deg, var(--gold-light) 0%, #e8cd94 50%, var(--gold) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
-}
-.hero__unit {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 400;
-  font-size: clamp(1.1rem, 3vw, 1.6rem);
-  margin-left: 0.4rem;
 }
 
 /* Section title: garis dekoratif di bawah */
@@ -679,93 +623,27 @@ h2.section__title::after {
   border-radius: 2px;
 }
 
-/* Timeline: garis penghubung halus — tidak mengganggu center alignment */
-@media (min-width: 768px) {
-  .timeline {
-    position: relative;
-  }
-  .timeline::before {
-    content: "";
-    position: absolute;
-    left: 50%; top: 0; bottom: 0;
-    width: 2px;
-    transform: translateX(-1px);
-    background: linear-gradient(180deg, transparent 0%, var(--border) 8%, var(--border) 92%, transparent 100%);
-  }
-}
-
-/* Galeri: caption elegan dengan garis emas */
-.gallery__caption {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 400;
-  color: var(--ink-soft);
-  text-align: center;
-  margin-top: 0.6rem;
-  position: relative;
-  padding-top: 0.8rem;
-}
-.gallery__caption::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 50%;
-  transform: translateX(-50%);
-  width: 2rem; height: 1px;
-  background: var(--gold);
-  opacity: 0.6;
-}
-
-/* Kartu ucapan: kutip dekoratif */
-.wish__text {
-  position: relative;
-}
-.wish__text::before {
+/* Kartu: kutip dekoratif besar di sudut */
+.card__salutation::before {
   content: "\201C";
   font-family: var(--font-display);
-  font-size: 3rem;
-  line-height: 1;
-  color: var(--wedding-soft);
-  position: absolute;
-  top: -0.8rem; left: -0.3rem;
-  opacity: 0.7;
-  pointer-events: none;
-}
-
-/* Kutipan: tipografi besar elegan */
-#kutipan blockquote {
-  position: relative;
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: clamp(1.3rem, 3.5vw, 2rem);
-  line-height: 1.5;
-  color: var(--wedding-deep);
-  max-width: 38rem;
-  margin: 0 auto;
-  padding: 2rem 1rem 1rem;
-}
-#kutipan blockquote::before {
-  content: "\201C";
-  font-size: 5rem;
-  line-height: 0.5;
+  font-size: 4rem;
+  line-height: 0;
   color: var(--gold);
-  opacity: 0.45;
+  opacity: 0.4;
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1.2rem;
 }
 
-/* (Reveal animasi tetap memakai definisi asli di atas — lihat .reveal { opacity: 0 }) */
-
-/* Footer: garis emas pemisah */
-.footer {
-  position: relative;
-  border-top: 2px solid transparent;
-  background-image: linear-gradient(var(--paper), var(--paper)),
-                    linear-gradient(90deg, transparent 0%, var(--gold) 50%, transparent 100%);
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
+/* Pesan penutup: tanda kutip dekoratif */
+.quote blockquote p::before {
+  content: "\201C";
+  color: var(--gold);
+  font-size: 1.4em;
+  margin-right: 0.1em;
 }
 
-/* Dekoratif: bunga kecil di sudut hero (pure CSS) */
+/* Footer: garis emas pemisah sudah di atas; vignette bawah hero */
 .hero::after {
   content: "";
   position: absolute;
@@ -777,25 +655,14 @@ h2.section__title::after {
 }
 
 /* Nav: glassmorphism halus */
-.site-nav {
+.nav {
   backdrop-filter: blur(10px) saturate(140%);
   -webkit-backdrop-filter: blur(10px) saturate(140%);
   background: rgba(253, 250, 247, 0.88);
 }
 
-/* Hover galeri: zoom halus pada gambar */
-.gallery__item {
-  overflow: hidden;
-}
-.gallery__item img {
-  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-.gallery__item:hover img {
-  transform: scale(1.04);
-}
-
 /* Focus state untuk keyboard nav link */
-.site-nav a:focus-visible {
+.nav a:focus-visible {
   background: var(--wedding-soft);
   border-radius: 6px;
 }

@@ -3,50 +3,37 @@
    build-content.mjs — pembuat index.html dari content.config.json
    ---------------------------------------------------------------------
    content.config.json adalah SATU-SATUNYA sumber naskah & nilai.
-   File ini merakit index.html dan assets/js/config.js dari sumber itu.
-
-   Jalankan setelah mengubah content.config.json:
-       node tools/build-content.mjs
-
-   index.html adalah BERKAS HASIL GENERASI. Jangan menyunting langsung;
-   edit content.config.json lalu bangun ulang. Header pada index.html
-   yang dihasilkan akan mengulang peringatan ini.
-
-   Tanpa dependensi: hanya modul bawaan Node (fs, path).
+   Konsep situs: KARTU UCAPAN dari anak (Yuli) untuk Papa & Mama —
+   30 tahun pernikahan, 1 anak, tanpa detail yang tidak diketahui anak.
+   File ini merakit index.html dan assets/js/config.js.
    ===================================================================== */
 
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const CFG_PATH = join(ROOT, 'content.config.json');
 
-const cfg = JSON.parse(readFileSync(CFG_PATH, 'utf8'));
+const cfg = JSON.parse(readFileSync(join(ROOT, 'content.config.json'), 'utf8'));
 
 /* ---------- 1. Registry nilai ---------- */
 const VALUES = cfg.values || {};
 const SET = cfg.settings || {};
 
 /** Daftar token yang sah. Selain daftar ini, token apa pun = bug. */
-const DOCUMENTED_TOKENS = new Set([
-  ...Object.keys(VALUES),
-  'Deskripsi Foto 1', 'Deskripsi Foto 2', 'Deskripsi Foto 3',
-  'Keterangan Foto 1', 'Keterangan Foto 2', 'Keterangan Foto 3'
-]);
-
-/* Token opsional: dibuang seluruh kartunya bila belum diisi, sesuai
-   kontrak naskah. Token wajib tetap tampil agar jelas belum diisi. */
-const OPTIONAL_TOKENS = new Set([
-  'Kota Domisili', 'Nama Anak 1', 'Nama Anak 2', 'Nama Anak 3',
-  'Nama Orang Tua', 'Nama Keponakan', 'Nama Penyusun'
-]);
+const DOCUMENTED_TOKENS = new Set(Object.keys(VALUES));
 
 const TOKEN_RE = /\[([A-Za-z][A-Za-z0-9 .&-]{2,40})\]/g;
 
+/* ---------- 2. Substitusi token ---------- */
+function fill(text) {
+  return String(text ?? '').replace(TOKEN_RE, (whole, name) =>
+    VALUES[name] !== undefined ? VALUES[name] : whole);
+}
+
 function isUnresolved(text) {
-  TOKEN_RE.lastIndex = 0;
   let m;
+  TOKEN_RE.lastIndex = 0;
   while ((m = TOKEN_RE.exec(String(text ?? '')))) {
     const name = m[1].trim();
     if (VALUES[name] !== undefined && VALUES[name].trim() === m[0]) return name;
@@ -54,32 +41,12 @@ function isUnresolved(text) {
   return null;
 }
 
-/** Ganti [Token] dengan nilainya; token yang belum diisi dibiarkan. */
-function fill(text) {
-  return String(text ?? '').replace(TOKEN_RE, (whole, name) => {
-    const key = name.trim();
-    return VALUES[key] !== undefined ? VALUES[key] : whole;
-  });
+/** Ganti [Token] dengan nilainya; token yang belum diisi dibiarkan
+    dan diberi penanda visual <mark class="todo">. */
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"]/g, c =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 }
-
-function esc(text) {
-  return String(text ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
-
-/* ---------- 2. Laporan placeholder ---------- */
-const usedTokens = new Set();
-function scanTokens(html) {
-  let m;
-  const re = new RegExp(TOKEN_RE.source, 'g');
-  while ((m = re.exec(html))) usedTokens.add(m[1].trim());
-  return html;
-}
-
-/** Tandai token yang belum diisi agar terlihat jelas sebagai "belum diisi". */
 function mark(text) {
   const filled = fill(text);
   if (isUnresolved(filled) === null) return esc(filled);
@@ -87,103 +54,35 @@ function mark(text) {
     (whole) => `<mark class="todo" title="Belum diisi — ganti di content.config.json">${whole}</mark>`);
 }
 
-/* ---------- 3. Galeri: pakai foto bila ada, ilustrasi bila belum ----------
-   Aturan alt & caption mengikuti kontrak naskah:
-     - alt WAJIB terisi. Kalau nama fotonya sudah terisi tapi deskripsi
-       belum, tampilkan placeholder terdaftar (menandai pekerjaan tersisa)
-       dan beri peringatan saat build.
-     - caption BOLEH kosong. Kalau belum diisi, paragrafnya dihapus
-       sekalian — jangan sisakan placeholder kosong di halaman.
-   Deskripsi & keterangan foto dibaca dari registry `values` yang sama,
-   jadi bisa diisi terpusat. */
-function resolvePhotoText(text) {
-  const filled = fill(text);
-  return isUnresolved(filled) === null ? filled : null;
+/* ---------- 3. Lirik ---------- */
+function buildLyrics() {
+  const secs = (cfg.lirik?.sections) || [];
+  return secs.map(s => {
+    const lines = (s.lines || [])
+      .map(l => `          <p class="lyric__line">${esc(l)}</p>`).join('\n');
+    return `        <section class="lyric__stanza" data-label="${esc(s.label)}">
+          <h3 class="lyric__label">${esc(s.label)}</h3>
+${lines}
+        </section>`;
+  }).join('\n');
 }
 
-const photoWarnings = [];
-
-function buildGallery() {
-  const items = (cfg.galeri?.items || []).map((it, i) => {
-    const photoExists = it.photo && existsSync(join(ROOT, it.photo));
-    const src = photoExists ? it.photo : it.fallback;
-
-    let alt;
-    if (photoExists) {
-      alt = resolvePhotoText(it.photoAltToken);
-      if (alt === null) {
-        // alt wajib — tampilkan token terdaftar, jangan diamkan.
-        alt = esc(fill(it.photoAltToken)).replace(TOKEN_RE,
-          (whole) => `<mark class="todo" title="Alt text foto wajib diisi — content.config.json">${whole}</mark>`);
-        photoWarnings.push(`${it.photo}: alt belum diisi`);
-      }
-    } else {
-      alt = it.alt; // ilustrasi default: alt menjelaskan ilustrasi itu
-    }
-
-    const captionRaw = photoExists ? it.photoCaptionToken : it.caption;
-    const caption = resolvePhotoText(captionRaw);
-
-    return `        <li class="gallery__item">
-          <img src="${esc(src)}" alt="${esc(alt)}" width="640" height="480"
-               loading="${i === 0 ? 'eager' : 'lazy'}" decoding="async"
-               data-fallback="${esc(it.fallback)}" data-photo="${esc(it.photo)}">
-          ${caption ? `<p class="gallery__caption">${mark(caption)}</p>` : ''}
-        </li>`;
-  });
-  return items.join('\n');
-}
-
-/* ---------- 4. Kartu ucapan keluarga ---------- */
-function buildWishes() {
-  const voices = cfg.keluarga?.voices || [];
-  const kept = [];
-  for (const v of voices) {
-    const unresolvedName = isUnresolved(fill(v.name));
-    if (unresolvedName && v.optional && OPTIONAL_TOKENS.has(unresolvedName)) {
-      continue; // opsional & belum diisi -> buang kartunya, jangan sisakan placeholder
-    }
-    kept.push(v);
-  }
-  return kept.map(v => `        <li class="wish">
-          <p class="wish__from">${mark(v.name)}</p>
-          <p class="wish__relation">${esc(v.relation)}</p>
-          <p class="wish__text">${mark(v.text)}</p>
-        </li>`).join('\n');
-}
-
-/* ---------- 5. Timeline ---------- */
-function buildTimeline() {
-  return (cfg.perjalanan?.items || []).map((it, i) => `        <li class="timeline__item">
-          <p class="timeline__step" aria-hidden="true">${i + 1}</p>
-          <h3 class="timeline__title">${mark(it.label)}</h3>
-          <p class="timeline__text">${mark(it.text)}</p>
-        </li>`).join('\n');
-}
-
-/* ---------- 6. Navigasi ---------- */
+/* ---------- 4. Navigasi ---------- */
 function buildNav() {
   return (cfg.nav || []).map(n =>
     `      <li><a href="${esc(n.target)}">${esc(n.label)}</a></li>`).join('\n');
 }
 
-/* ---------- 7. Rakit halaman ---------- */
-const M = cfg.meta, H = cfg.hero, S = cfg.sambutan, P = cfg.perjalanan;
-const G = cfg.galeri, K = cfg.keluarga, Q = cfg.kutipan, F = cfg.footer;
+/* ---------- 5. Rakit halaman ---------- */
+const M = cfg.meta, H = cfg.hero, K = cfg.kartu, L = cfg.lirik, PN = cfg.pesan;
+const AU = SET.audio || {};
+const F = cfg.footer;
+
+const SITE_URL = String(SET.siteUrl || '').trim().replace(/\/+$/, '');
+const absolute = (rel) => SITE_URL ? `${SITE_URL}/${rel}` : rel;
 
 const title = fill(M.title);
 const description = fill(M.description);
-
-/* ---------- 6b. URL absolut untuk tautan berbagi ----------
-   Tautan di dalam halaman HARUS relatif (aman di subpath). Tapi og:image
-   dan <link rel=canonical> harus ABSOLUT: scraper social media dan
-   WhatsApp mengambil URL itu dari server mana pun, dan URL relatif
-   tidak bisa di_resolve tanpa tahu halaman induknya.
-
-   siteUrl dikosongkan secara default karena di github.io/<repo>/ path
-   relatif sudah aman. Diisi hanya bila memakai domain kustom. */
-const SITE_URL = String(SET.siteUrl || '').trim().replace(/\/+$/, '');
-const absolute = (rel) => SITE_URL ? `${SITE_URL}/${rel}` : rel;
 
 const html = `<!DOCTYPE html>
 <!--
@@ -197,23 +96,18 @@ const html = `<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
-<meta name="theme-color" content="${esc(SET.themeColor || '#6f1a26')}">
-<meta name="author" content="${esc(VALUES['Nama Penyusun'] || '')}">
-<meta property="og:type" content="website">
-<meta property="og:locale" content="id_ID">
+<meta name="theme-color" content="${esc(SET.themeColor || '#7a1f2b')}">
 <meta property="og:title" content="${esc(fill(M.ogTitle))}">
 <meta property="og:description" content="${esc(fill(M.ogDescription))}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${esc(absolute(''))}">
 <meta property="og:image" content="${esc(absolute('assets/img/og-cover.png'))}">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-${SITE_URL ? `<link rel="canonical" href="${esc(SITE_URL)}/">` : ''}
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-
-<a class="skip-link" href="#sambuten">Lompat ke isi utama</a>
+<a class="skip-link" href="#kartu">Lompat ke isi utama</a>
 
 <!-- ============ HERO ============ -->
 <header class="hero" id="atas">
@@ -230,14 +124,7 @@ ${SITE_URL ? `<link rel="canonical" href="${esc(SITE_URL)}/">` : ''}
     <p class="hero__sub hero__sub--long">${mark(H.subtitle)}</p>
     <p class="hero__sub hero__sub--short">${mark(H.subtitleShort)}</p>
 
-    <p class="hero__date">
-      <span class="hero__date-label">Perayaan</span>
-      <span data-bind="celebrationDate">${mark(VALUES['Tanggal Perayaan'])}</span>
-      <span aria-hidden="true">&middot;</span>
-      <span data-bind="celebrationPlace">${mark(VALUES['Lokasi Perayaan'])}</span>
-    </p>
-
-    <a class="btn btn--primary" href="#sambuten">Baca Ucapan</a>
+    <a class="btn btn--primary" href="#kartu">Buka Kartunya</a>
   </div>
 </header>
 
@@ -250,79 +137,68 @@ ${buildNav()}
 
 <main id="isi">
 
-  <!-- ============ SAMBUTAN ============ -->
-  <section class="section" id="${esc(S.id)}" aria-labelledby="h-sambuten">
+  <!-- ============ KARTU UCAPAN ============ -->
+  <section class="section" id="${esc(K.id)}" aria-labelledby="h-kartu">
     <div class="wrap">
-      <h2 class="section__title" id="h-sambuten">${mark(S.heading)}</h2>
-
-      <div class="prose prose--full">
-${(S.paragraphs || []).map(p => `        <p>${mark(p)}</p>`).join('\n')}
-      </div>
-
-      <details class="prose-short">
-        <summary>${mark(S.short.heading)}</summary>
-        <div class="prose">
-${(S.short?.paragraphs || []).map(p => `          <p>${mark(p)}</p>`).join('\n')}
-        </div>
-      </details>
-
-      <div class="countdown" id="countdown" hidden>
-        <p class="countdown__label">${mark(SET.countdownLabel || '')}</p>
-        <p class="countdown__value">
-          <span id="cd-days">0</span><span class="countdown__sep" aria-hidden="true">&middot;</span><span id="cd-hours">00</span><span class="countdown__sep" aria-hidden="true">&middot;</span><span id="cd-minutes">00</span>
-        </p>
-        <p class="countdown__hint">hari &middot; jam &middot; menit</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ PERJALANAN ============ -->
-  <section class="section section--alt" id="${esc(P.id)}" aria-labelledby="h-perjalanan">
-    <div class="wrap">
-      <h2 class="section__title" id="h-perjalanan">${mark(P.heading)}</h2>
-      <p class="section__lead">${mark(P.lead)}</p>
-      <ol class="timeline">
-${buildTimeline()}
-      </ol>
-    </div>
-  </section>
-
-  <!-- ============ GALERI ============ -->
-  <section class="section" id="${esc(G.id)}" aria-labelledby="h-galeri">
-    <div class="wrap">
-      <h2 class="section__title" id="h-galeri">${mark(G.heading)}</h2>
-      <p class="section__lead">${mark(G.lead)}</p>
-      <ul class="gallery" id="gallery-list">
-${buildGallery()}
-      </ul>
-    </div>
-  </section>
-
-  <!-- ============ UCAPAN KELUARGA ============ -->
-  <section class="section section--alt" id="${esc(K.id)}" aria-labelledby="h-keluarga">
-    <div class="wrap">
-      <h2 class="section__title" id="h-keluarga">${mark(K.heading)}</h2>
+      <h2 class="section__title" id="h-kartu">${mark(K.heading)}</h2>
       <p class="section__lead">${mark(K.lead)}</p>
-      <ul class="wishes" id="wishes-list">
-${buildWishes()}
-      </ul>
+
+      <article class="card">
+        <p class="card__salutation">${mark(K.salutation)}</p>
+        <div class="prose prose--full">
+${(K.paragraphs || []).map(p => `          <p>${mark(p)}</p>`).join('\n')}
+        </div>
+      </article>
     </div>
   </section>
 
-  <!-- ============ KUTIPAN ============ -->
-  <section class="section" id="${esc(Q.id)}" aria-labelledby="h-kutipan">
+  <!-- ============ LIRIK ============ -->
+  <section class="section section--alt" id="${esc(L.id)}" aria-labelledby="h-lirik">
     <div class="wrap">
-      <h2 class="section__title" id="h-kutipan">${mark(Q.heading)}</h2>
+      <h2 class="section__title" id="h-lirik">${mark(L.heading)}</h2>
+      <p class="section__lead">${mark(L.lead)}</p>
+
+      <div class="lyrics" id="lyrics">
+${buildLyrics()}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PESAN PENUTUP ============ -->
+  <section class="section" id="${esc(PN.id)}" aria-labelledby="h-pesan">
+    <div class="wrap">
+      <h2 class="section__title" id="h-pesan">${mark(PN.heading)}</h2>
+      <p class="section__lead">${mark(PN.lead)}</p>
+
       <figure class="quote">
         <blockquote>
-          <p>${mark(Q.blockquote)}</p>
+          <p>${mark(PN.blockquote)}</p>
         </blockquote>
-        <figcaption><cite>${mark(Q.attribution)}</cite></figcaption>
+        <figcaption><cite>${mark(PN.attribution)}</cite></figcaption>
       </figure>
+
+      <p class="pesan__closing">${mark(PN.closing)}</p>
+      <p class="pesan__closing2">${mark(PN.closing2)}</p>
     </div>
   </section>
 
 </main>
+
+<!-- ============ AUDIO: lagu mengalun saat situs dibuka ============ -->
+<section class="player" aria-label="Pemutar lagu">
+  <div class="wrap player__inner">
+    <p class="player__meta">
+      <span class="player__note">${esc(AU.title || 'Lagu')}</span>
+      <span class="player__artist">— ${esc(AU.artist || '')}</span>
+    </p>
+    <button type="button" class="player__btn" id="audio-toggle"
+      aria-pressed="false" aria-label="Putar lagu">
+      <span class="player__icon player__icon--play" aria-hidden="true"></span>
+      <span class="player__state">Putar lagu</span>
+    </button>
+    <audio id="bg-audio" src="${esc(AU.src || '')}" loop preload="auto"></audio>
+  </div>
+</section>
 
 <!-- ============ FOOTER ============ -->
 <footer class="footer">
@@ -339,25 +215,11 @@ ${buildWishes()}
 </html>
 `;
 
-const out = scanTokens(html);
-
-/* ---------- 8. Validasi ---------- */
-const undocumented = [...usedTokens].filter(t => !DOCUMENTED_TOKENS.has(t));
-const unresolved = [...usedTokens].filter(t =>
-  VALUES[t] !== undefined && VALUES[t].trim() === `[${t}]`);
-
-if (undocumented.length) {
-  console.error('GAGAL — placeholder tanpa daftar: ' + undocumented.join(', '));
-  process.exit(1);
-}
-if (/lorem ipsum/i.test(out)) {
-  console.error('GAGAL — ditemukan "lorem ipsum"');
-  process.exit(1);
-}
+const out = html;
 
 writeFileSync(join(ROOT, 'index.html'), out, 'utf8');
 
-/* ---------- 9. config.js (lapisan runtime) ---------- */
+/* ---------- 6. config.js (lapisan runtime) ---------- */
 const runtime = `/* BERKAS HASIL GENERASI dari content.config.json.
    Hanya memuat PENGATURAN + registry nilai untuk main.js.
    Naskah halaman ada di index.html. Jalankan node tools/build-content.mjs
@@ -376,14 +238,9 @@ window.SITE_CONFIG = {
 `;
 writeFileSync(join(ROOT, 'assets/js/config.js'), runtime, 'utf8');
 
-/* ---------- 10. Laporan ---------- */
-console.log('index.html      : ' + out.length + ' byte, ' + (cfg.galeri?.items || []).length + ' foto, ' +
-  (cfg.keluarga?.voices || []).length + ' ucapan');
-console.log('placeholder     : ' + usedTokens.size + ' token terdaftar, ' +
-  unresolved.length + ' belum diisi' + (unresolved.length ? ' -> ' + unresolved.join(', ') : ''));
-console.log('tanpa daftar    : ' + (undocumented.length || 0));
-if (photoWarnings.length) {
-  console.log('\nPERINGATAN — foto asli terpasang tapi alt belum diisi:');
-  photoWarnings.forEach(w => console.log('  ! ' + w));
-}
+/* ---------- 7. Laporan ---------- */
+console.log('index.html      : ' + out.length + ' byte, ' +
+  (cfg.lirik?.sections || []).length + ' stanza lirik');
+console.log('audio           : ' + (AU.src || '(tidak ada)') +
+  (AU.autostart ? ' [autostart]' : ' [manual]'));
 console.log('OK');

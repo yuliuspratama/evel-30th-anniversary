@@ -2,8 +2,8 @@
    shots.mjs — tangkapan layar untuk pemeriksaan visual
    ---------------------------------------------------------------------
    Menyimpan PNG ke tests/screenshots/ untuk viewport utama dan untuk
-   setiap section, supaya hasil Integr can diperiksa mata, bukan hanya
-   lewat angka. Jalankan: node tests/shots.mjs
+   setiap section, supaya hasil integrasi dapat diperiksa mata, bukan
+   hanya lewat angka. Jalankan: node tests/shots.mjs
    ===================================================================== */
 
 import { chromium } from 'playwright-core';
@@ -19,7 +19,7 @@ mkdirSync(OUT, { recursive: true });
 const server = await startServer(ROOT, 0);
 const browser = await chromium.launch({
   executablePath: '/usr/bin/chromium',
-  args: ['--no-sandbox', '--disable-dev-shm-usage']
+  args: ['--no-sandbox', '--disable-dev-shm-usage', '--autoplay-policy=no-user-gesture-required']
 });
 
 const shots = [];
@@ -49,16 +49,19 @@ try {
   await capture(p, '02-desktop-full', { full: true });
 
   for (const [name, sel] of [
-    ['03-sambutan', '#sambuten'],
-    ['04-perjalanan', '#perjalanan'],
-    ['05-galeri', '#galeri'],
-    ['06-keluarga', '#keluarga'],
-    ['07-kutipan', '#kutipan']
+    ['03-kartu', '#kartu'],
+    ['04-lirik', '#lirik'],
+    ['05-pesan', '#pesan']
   ]) {
     await p.evaluate(s => document.querySelector(s).scrollIntoView({ block: 'start' }), sel);
     await p.waitForTimeout(950);
     await capture(p, name);
   }
+
+  /* Player dalam keadaan berputar (autoplay) */
+  await p.evaluate(() => document.querySelector('.player').scrollIntoView({ block: 'center' }));
+  await p.waitForTimeout(600);
+  await capture(p, '06-player-playing');
   await desktop.close();
 
   /* Mobile */

@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Kartu berbagi: tiga puluh tahun pernikahan">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Kartu ucapan: tiga puluh tahun pernikahan Papa dan Mama">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="0.4" y2="1">
       <stop offset="0%" stop-color="#4a0f19"/>
@@ -21,7 +21,7 @@
 
   <text x="600" y="286" text-anchor="middle" fill="#e8cd94"
         font-family="system-ui, 'Segoe UI', Roboto, sans-serif"
-        font-size="26" letter-spacing="11">PERINGATAN TIGA PULUH TAHUN</text>
+        font-size="26" letter-spacing="11">KARTU UCAPAN UNTUK PAPA &amp; MAMA</text>
 
   <text x="600" y="432" text-anchor="middle" fill="#ffffff"
         font-family="Georgia, 'Times New Roman', serif"
@@ -31,5 +31,9 @@
         font-family="Georgia, 'Times New Roman', serif"
         font-size="40">Tahun Bersama</text>
 
-  <path d="M470 548 h260" stroke="#e8cd94" stroke-width="2" opacity="0.6"/>
+  <text x="600" y="566" text-anchor="middle" fill="#e8cd94" opacity="0.85"
+        font-family="system-ui, 'Segoe UI', Roboto, sans-serif"
+        font-size="20" letter-spacing="4">— dari anakmu, Yuli —</text>
+
+  <path d="M470 596 h260" stroke="#e8cd94" stroke-width="2" opacity="0.6"/>
 </svg>

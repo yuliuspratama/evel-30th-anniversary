@@ -1,195 +1,129 @@
 {
   "_readme": [
-    "SATU-SATUNYA sumber nilai situs ini. Setiap nilai di bawah bisa diganti",
-    "tanpa menyentuh index.html. Setelah mengubah file ini, jalankan:",
+    "SATU-SATUNYA sumber nilai situs ini. Setelah mengubah file ini, jalankan:",
     "    node tools/build-content.mjs",
-    "lalu refresh browser. Nilai di objects 'values' boleh diisi nilai nyata",
-    "atau dibiarkan sebagai token [Nama ...] — bila dibiarkan, token itu tampil",
-    "dan ditandai jelas sebagai hal yang belum diisi."
+    "lalu refresh browser. Konsep situs: KARTU UCAPAN dari seorang anak",
+    "(Yuli) untuk Papa & Mama — 30 tahun pernikahan mereka. POV anak tunggal",
+    "yang tidak menceritakan perjalanan yang tidak ia ketahui."
   ],
   "values": {
-    "Nama Pasangan": "Papa & Mama",
-    "Tanggal Pernikahan": "5 Oktober 1996",
-    "Lokasi Pernikahan": "Malang",
-    "Tanggal Perayaan": "5 Oktober 2026",
-    "Lokasi Perayaan": "Malang",
-    "Kota Domisili": "[Kota Domisili]",
-    "Nama Anak 1": "Yuli",
-    "Nama Anak 2": "Adik",
-    "Nama Anak 3": "[Nama Anak 3]",
-    "Nama Orang Tua": "Keluarga Besar",
-    "Nama Keponakan": "[Nama Keponakan]",
-    "Nama Penyusun": "Yuli",
-    "Deskripsi Foto 1": "Papa dan Mama berjalan bersama di taman kota pada sore hari, tiga puluh tahun setelah hari pertama pernikahan mereka.",
-    "Deskripsi Foto 2": "Tangan Papa dan Mama berpegangan erat — cengkeraman yang tak pernah longgar selama tiga dekade.",
-    "Deskripsi Foto 3": "Bunga melati di taman rumah, mekar penuh di musim yang sama dengan ulang tahun pernikahan mereka.",
-    "Keterangan Foto 1": "Dua orang, satu arah — taman kota, 2026",
-    "Keterangan Foto 2": "Cengkeraman yang tak pernah longgar",
-    "Keterangan Foto 3": "Melati mekar di musim yang sama"
+    "Nama Anak": "Yuli",
+    "Nama Pasangan": "Papa & Mama"
   },
   "settings": {
     "anniversaryNumber": 30,
     "anniversaryDate": "2026-10-05T08:00:00+07:00",
     "countdownTarget": "2026-10-05T08:00:00+07:00",
     "themeColor": "#7a1f2b",
-    "siteUrl": "https://yuliuspratama.github.io/evel-30th-anniversary"
+    "siteUrl": "https://yuliuspratama.github.io/evel-30th-anniversary/",
+    "language": "id-ID",
+    "audio": {
+      "src": "assets/audio/mutiara-cinta-kita.mp3",
+      "title": "Mutiara Cinta Kita",
+      "artist": "Untuk Papa & Mama",
+      "mode": "unmute",
+      "autostart": false
+    }
   },
   "meta": {
-    "title": "30 Tahun Pernikahan — [Nama Pasangan]",
-    "description": "Merayakan 30 tahun [Nama Pasangan] bersama sejak [Tanggal Pernikahan] — cerita, ucapan keluarga, dan kenangan yang kami kumpulkan untuk mereka.",
-    "ogTitle": "30 Tahun Pernikahan — [Nama Pasangan]",
-    "ogDescription": "Satu perjalanan, tiga puluh tahun, satu cinta. Mari merayakannya bersama [Nama Pasangan]."
+    "title": "Untuk Papa & Mama — 30 Tahun Kalian Bersama",
+    "description": "Kartu ucapan dari anakmu, Yuli, untuk merayakan tiga puluh tahun pernikahan Papa & Mama.",
+    "ogTitle": "Untuk Papa & Mama — 30 Tahun Kalian Bersama",
+    "ogDescription": "Kartu ucapan dari anakmu, Yuli, untuk merayakan 30 tahun pernikahan kalian."
   },
   "nav": [
-    {
-      "label": "Sambutan",
-      "target": "#sambuten"
-    },
-    {
-      "label": "Perjalanan",
-      "target": "#perjalanan"
-    },
-    {
-      "label": "Galeri",
-      "target": "#galeri"
-    },
-    {
-      "label": "Keluarga",
-      "target": "#keluarga"
-    },
-    {
-      "label": "Kutipan",
-      "target": "#kutipan"
-    }
+    { "label": "Kartu", "target": "#kartu" },
+    { "label": "Lirik", "target": "#lirik" },
+    { "label": "Pesan", "target": "#pesan" }
   ],
   "hero": {
-    "eyebrow": "Peringatan 30 Tahun Pernikahan",
-    "h1": "[Nama Pasangan] — Tiga Pulas Tahun Bersama",
-    "subtitle": "Sejak [Tanggal Pernikahan], dan untuk tiga puluh tahun ke depan.",
-    "subtitleShort": "Sejak [Tanggal Pernikahan].",
+    "eyebrow": "Sebuah kartu ucapan dari anakmu",
+    "h1": "Untuk Papa & Mama",
+    "subtitle": "Selamat 30 tahun pernikahan — dari Yuli, anakmu, yang tumbuh besar di rumah cinta kalian.",
+    "subtitleShort": "Selamat 30 tahun, Papa & Mama. — Yuli",
     "unit": "Tahun"
   },
-  "sambutan": {
-    "id": "sambuten",
-    "heading": "Sambutan",
+  "kartu": {
+    "id": "kartu",
+    "heading": "Kartu untuk Papa & Mama",
+    "lead": "Ditulis oleh satu-satunya anak kalian, yang tidak tahu seluruh perjalanan kalian — tapi tahu betapa beruntungnya dia tinggal di dalamnya.",
+    "salutation": "Papa, Mama yang kusayang,",
     "paragraphs": [
-      "Tiga puluh tahun. Angka itu terdengar seperti hitungan yang biasa, sampai kita sadar bahwa di dalamnya ada ribuan hari kecil yang tak pernah masuk buku sejarah — sarapan yang sama, kali ke-berapa menyalakan kompor, kali ke-berapa menyalakan lampu tidur, kali ke-berapa membatalkan rencana demi rencana lain yang lebih sederhana.",
-      "Kami menulis halaman ini bukan untuk merangkum tiga puluh tahun, karena mustahil. Kami menulisnya untuk satu hal yang ingin kami katakan sebelum angka itu berlalu: terima kasih, [Nama Pasangan], sudah memilih untuk tetap bersama — bukan karena tidak ada pilihan lain, melainkan karena kalian masih memilih satu sama lain setiap pagi.",
-      "Ini bukan biografi. Ini ucapan dari anak yang tumbuh di rumah yang kalian bangun, dengan tangan yang kalian pegang, dan dengan contoh yang kalian berikan tanpa pernah mengatakannya. Tiga puluh tahun bukan angka yang kami hitung, melainkan jumlah malam yang kalian pilih untuk tetap bersama."
-    ],
-    "short": {
-      "heading": "Sambutan singkat",
-      "paragraphs": [
-        "Tiga puluh tahun berisi ribuan hari kecil: sarapan jam yang sama, tawa setelah perdebatan, dan tangan yang tetap tenang.",
-        "Semuanya bermula pada [Tanggal Pernikahan] di [Lokasi Pernikahan], lalu berlanjut dengan hal-hal biasa yang membuat rumah terasa seperti rumah.",
-        "Ini kumpulan ucapan dari yang dekat maupun yang jauh. [Nama Pasangan], ini untuk kalian."
-      ]
-    }
-  },
-  "perjalanan": {
-    "id": "perjalanan",
-    "heading": "Perjalanan kami",
-    "lead": "Lima tonggak yang kami ingat, karena yang lain terlalu banyak untuk ditulis.",
-    "items": [
-      {
-        "label": "Tahun pertama",
-        "text": "Sarapan pertama di [Lokasi Pernikahan] terasa seperti piknik yang terlalu khidmat — sebab kami belum punya meja, belum punya kursi, tapi sudah punya satu sama lain."
-      },
-      {
-        "label": "Tahun kelima",
-        "text": "Pindah ke [Kota Domisili], membawa sedikit barang dan banyak rencana."
-      },
-      {
-        "label": "Tahun ke-7",
-        "text": "Satu rumah kecil, satu anak kecil, satu kucing yang datang sendiri dan menolak pergi. Hidup terasa sempurna justru karena tidak sempurna."
-      },
-      {
-        "label": "Tahun ke-15",
-        "text": "Anak mulai sekolah, rutinitas mulai panjang. Kami belajar bahwa cinta yang panjang bukan yang paling raya, melainkan yang paling sabar."
-      },
-      {
-        "label": "Tahun ke-30",
-        "text": "Kembali ke [Lokasi Pernikahan], satu foto, tiga puluh tahun dalam satu bingkai. Wajah berubah, cengkeraman tidak."
-      }
+      "Selamat tiga puluh tahun pernikahan kalian.",
+      "Aku tidak hadir di awal cerita kalian. Tiga puluh tahun itu bermula tujuh tahun sebelum aku ada, dan banyak bagiannya — kegundahan, keputusan, malam-malam yang hanya kalian berdua yang tahu — tidak pernah sampai ke telingaku. Aku tidak akan berpura-pura tahu. Tapi aku tahu bagian yang kulihat sebagai anak: dapur yang tidak pernah sepi, doa yang tidak pernah putus, dan dua orang yang setiap hari memilih untuk tetap bersama.",
+      "Aku tahu bahwa cinta kalian tidak sering diceritakan, karena kalian memang tidak orangnya bercerita. Tapi aku melihatnya setiap hari: di cara Papa menunggu Mama selesai menata meja sebelum duduk, di cara Mama menyisihkan bagian terenak tanpa mengumumkannya, di cara kalian membagi satu masalah jadi separuh beban masing-masing.",
+      "Selama tiga puluh tahun itu, aku hanya bisa melihat dari dekat — dan dari dekat inilah aku belajar apa artinya setia, apa artinya sabar, dan apa artinya cinta yang tidak perlu diumumkan untuk tetap terasa nyata.",
+      "Terima kasih, Papa. Terima kasih, Mama. Terima kasih sudah menjadi rumah pertama dan paling aman yang pernah kutahu. Semoga Tuhan memanjangkan tahun-tahun kalian bersama, dan semoga aku selalu diberi kesempatan melihatnya dari dekat.",
+      "— Yuli, anak kalian"
     ]
   },
-  "galeri": {
-    "id": "galeri",
-    "heading": "Galeri",
-    "lead": "Tiga bingkai kenangan yang kami simpan dari tiga puluh tahun bersama.",
-    "items": [
-      {
-        "photo": "assets/foto-1.jpg",
-        "fallback": "assets/img/placeholder-1.svg",
-        "alt": "Ilustrasi dua orang berjalan bersama di taman pada sore hari",
-        "caption": "Dua orang, satu arah",
-        "photoAltToken": "[Deskripsi Foto 1]",
-        "photoCaptionToken": "[Keterangan Foto 1]"
-      },
-      {
-        "photo": "assets/foto-2.jpg",
-        "fallback": "assets/img/placeholder-2.svg",
-        "alt": "Ilustrasi dua tangan yang berpegangan erat",
-        "caption": "Cengkeraman yang tak pernah longgar",
-        "photoAltToken": "[Deskripsi Foto 2]",
-        "photoCaptionToken": "[Keterangan Foto 2]"
-      },
-      {
-        "photo": "assets/foto-3.jpg",
-        "fallback": "assets/img/placeholder-3.svg",
-        "alt": "Ilustrasi bunga melati yang mekar di sore hari",
-        "caption": "Usia yang panjang",
-        "photoAltToken": "[Deskripsi Foto 3]",
-        "photoCaptionToken": "[Keterangan Foto 3]"
-      }
+  "lirik": {
+    "id": "lirik",
+    "heading": "Lirik — Mutiara Cinta Kita",
+    "lead": "Lagu yang menyertai kartu ini. Biarkan lagunya berputar, biarkan liriknya bicara.",
+    "sections": [
+      { "label": "Intro", "lines": ["(musik)"] },
+      { "label": "Verse 1", "lines": [
+        "Kutatap halaman rumah kita",
+        "Jejak langkah tawa yang pernah ada",
+        "Anak-anak kini telah dewasa",
+        "Dan kita kembali berdua"
+      ]},
+      { "label": "Pre-Chorus", "lines": [
+        "Waktu berjalan tanpa terasa",
+        "Rambut kita mulai memut bersama",
+        "Namun hangat di dalam dada",
+        "Tak pernah berkurang sedikit jua"
+      ]},
+      { "label": "Chorus", "lines": [
+        "Tiga puluh tahun kita melangkah",
+        "Melewati badai tanpa menyerah",
+        "Kau adalah mutiara indah",
+        "Tempat hatiku selalu singgah",
+        "Terima kasih untuk setia",
+        "Mencintaiku sedalam ini selamanya"
+      ]},
+      { "label": "Verse 2", "lines": [
+        "Masih kuingat janji pertama",
+        "Di hadapan saksi dan dunia",
+        "Kini terbukti di setiap masa",
+        "Genggamanmu tak pernah dilepas jua"
+      ]},
+      { "label": "Chorus", "lines": [
+        "Tiga puluh tahun kita melangkah",
+        "Melewati badai tanpa menyerah",
+        "Kau adalah mutiara indah",
+        "Tempat hatiku selalu singgah",
+        "Terima kasih untuk setia",
+        "Mencintaiku sedalam ini selamanya"
+      ]},
+      { "label": "Bridge", "lines": [
+        "Jika waktu bisa berputar kembali",
+        "Aku akan tetap memilihmu",
+        "Dengan seluruh jiwa dan hati",
+        "Menua di sampingmu"
+      ]},
+      { "label": "Outro", "lines": [
+        "Tiga puluh tahun bersama",
+        "Mutiara cinta kita",
+        "(Selamanya)",
+        "Terima kasih, cintaku"
+      ]}
     ]
   },
-  "keluarga": {
-    "id": "keluarga",
-    "heading": "Dari kami untuk [Nama Pasangan]",
-    "lead": "Ucapan yang kami kumpulkan, seadanya dan dari hati.",
-    "voices": [
-      {
-        "name": "Yuli",
-        "relation": "Anak",
-        "optional": false,
-        "text": "Papa, Mama — terima kasih sudah menjadi rumah pertama yang paling aman. Aku belajar apa arti dewasa dari cara kalian berdua menyelesaikan masalah tanpa suara keras. Tiga puluh tahun kalian bersama adalah tiga puluh tahun aku belajar bahwa cinta itu nyata, bukan dari kata-kata, tapi dari kebiasaan kecil yang kalian ulang setiap hari. Selamat anniversary, [Nama Pasangan]. Aku bangga jadi anak kalian."
-      },
-      {
-        "name": "Adik",
-        "relation": "Anak",
-        "optional": false,
-        "text": "Kalau aku mengingat masa kecil, aku mengingat pelukan kalian berdua — yang satu hangat, yang lain kuat. Sampai kapan pun, aku tahu dari mana aku datang dan ke mana aku bisa pulang. Selamat 30 tahun, [Nama Pasangan]."
-      },
-      {
-        "name": "[Nama Anak 3]",
-        "relation": "Anak",
-        "optional": true,
-        "text": "Kami belajar banyak dari cara kalian berdua menyelesaikan masalah tanpa suara keras."
-      },
-      {
-        "name": "Keluarga Besar",
-        "relation": "Keluarga",
-        "optional": false,
-        "text": "Dari kalian berdua kami belajar bahwa cinta bukan hal besar, tapi kebiasaan kecil yang diulang setiap hari. Tiga puluh tahun kalian adalah tiga puluh tahun pelajaran untuk kami semua."
-      },
-      {
-        "name": "[Nama Keponakan]",
-        "relation": "Keponakan",
-        "optional": true,
-        "text": "Dulu kami masih kecil; sekarang kalian berdua yang mengajari kami cara tumbuh. Selamat anniversary, Om & Tante."
-      }
-    ]
-  },
-  "kutipan": {
-    "id": "kutipan",
-    "heading": "Kutipan",
-    "blockquote": "Tiga puluh tahun bukan angka yang kami hitung, melainkan jumlah malam yang kami pilih untuk tetap bersama.",
-    "attribution": "— untuk [Nama Pasangan], dari [Nama Penyusun]"
+  "pesan": {
+    "id": "pesan",
+    "heading": "Pesan Penutup",
+    "lead": "Dari lirik yang menemani kartu ini.",
+    "blockquote": "Kau adalah mutiara indah, tempat hatiku selalu singgah.",
+    "attribution": "— dari lagu \u201cMutiara Cinta Kita\u201d, untuk Papa & Mama",
+    "closing": "Selamat 30 tahun pernikahan kalian, Papa & Mama.",
+    "closing2": "Dengan cinta, anakmu Yuli.",
+    "footerNote": "Kartu ini dibuat oleh Yuli untuk Papa & Mama, memperingati 30 tahun pernikahan mereka sejak 5 Oktober 1996."
   },
   "footer": {
-    "line1": "Tiga puluh tahun, dan cerita ini baru dimulai.",
-    "line2": "Sampai jumpa di [Tanggal Perayaan], [Lokasi Perayaan].",
-    "credit": "Disusun oleh [Nama Penyusun] untuk [Nama Pasangan]."
+    "line1": "30 tahun, dari 1996 sampai hari ini.",
+    "line2": "Dibuat oleh anakmu, Yuli, dengan cinta.",
+    "credit": "Untuk Papa & Mama — 5 Oktober 1996, tiga puluh tahun kemudian."
   }
 }

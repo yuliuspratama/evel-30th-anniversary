@@ -1,13 +1,11 @@
 #!/usr/bin/env node
 /* =====================================================================
-   live-check.mjs — verifikasi URL GitHub Pages yang BENCH-ALREADYUP
+   live-check.mjs — verifikasi URL GitHub Pages setelah publish
    ---------------------------------------------------------------------
    Menguji situs yang sudah daring di URL subpath github.io/<repo>/,
    karena kondisi itu TIDAK bisa dibuktikan oleh server lokal: path
    absolut akan lolos di localhost tapi rusak di subpath, dan itu hanya
    terlihat ketika semua aset diunduh lewat URL publik.
-
-   Dipakai juga untuk smoke test setelah rollback.
 
    Jalankan:  node tests/live-check.mjs [url]
    ===================================================================== */
@@ -28,7 +26,7 @@ console.log(`\nMenguji: ${URL_}\n`);
 
 const browser = await chromium.launch({
   executablePath: '/usr/bin/chromium',
-  args: ['--no-sandbox', '--disable-dev-shm-usage']
+  args: ['--no-sandbox', '--disable-dev-shm-usage', '--autoplay-policy=no-user-gesture-required']
 });
 const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
 const page = await ctx.newPage();
@@ -51,12 +49,11 @@ try {
 check('halaman utama 200', resp.status() === 200, `status ${resp.status()}`);
 
 /* Aset yang benar-benar diunduh browser pada URL subpath. Inilah yang
-   membuktikan path relatif aman — bukan asumsi. */
+   membuktikan path relatif aman — bukan asumsi. Termasuk file lagu. */
 const assets = await page.evaluate(() =>
-  Array.from(document.querySelectorAll('img[src], link[href][rel="stylesheet"], script[src]'))
+  Array.from(document.querySelectorAll('img[src], link[href][rel="stylesheet"], script[src], audio[src]'))
     .map(el => el.getAttribute('src') || el.getAttribute('href'))
     .filter(Boolean));
-
 const assetResults = [];
 for (const a of [...new Set(assets)]) {
   const res = await page.request.get(new URL(a, URL_).href);
@@ -65,6 +62,13 @@ for (const a of [...new Set(assets)]) {
 const bad = assetResults.filter(r => r.status !== 200);
 check('semua aset termuat lewat URL subpath', bad.length === 0,
   bad.map(r => `${r.status} ${r.a}`).join(', ') || `${assetResults.length} aset: ${assetResults.map(r => r.a).join(' ')}`);
+
+/* Lagu harus benar-benar tersaji dari server publik. */
+const audioRes = await page.request.get(new URL('assets/audio/mutiara-cinta-kita.mp3', URL_).href);
+check('file lagu tersaji live (200)', audioRes.status() === 200,
+  `status ${audioRes.status()}, ${Math.round((audioRes.headers()['content-length'] || 0) / 1024)} KB`);
+check('tipe konten lagu benar',
+  /^audio\//.test(audioRes.headers()['content-type'] || ''), audioRes.headers()['content-type'] || '(tanpa tipe)');
 
 /* CSS benar-benar termuat? Kalau stylesheet 404 diam-diam, halaman
    tetap "200" tapi tampil polos — cek computed style. */
@@ -82,8 +86,8 @@ const styled = await page.evaluate(() => {
 check('CSS benar-benar diterapkan (bukan 404 diam-diam)',
   styled.bg !== 'rgba(0, 0, 0, 0)' && styled.h1Size >= 24,
   `bg=${styled.bg} h1=${styled.h1Size}px "${styled.h1Text}"`);
-check('h1 ada & bukan placeholder generator',
-  styled.h1Text.length > 0, `"${styled.h1Text}"`);
+check('h1 ada & menyapa Papa & Mama',
+  /papa/i.test(styled.h1Text), `"${styled.h1Text}"`);
 
 /* Anchor internal harus tetap resolve setelah path subpath */
 const anchors = await page.evaluate(() =>
@@ -94,24 +98,21 @@ const anchors = await page.evaluate(() =>
 check('semua anchor internal resolve', anchors.every(a => a.ok),
   `${anchors.length} anchor`);
 
-/* Countdown hanya hidup bila tanggal celebration diisi. */
-const cd = await page.evaluate(() => {
-  const el = document.getElementById('countdown');
-  return { exists: !!el, hidden: el ? el.hidden : null, days: (document.getElementById('cd-days') || {}).textContent };
-});
-check('countdown: tersembunyi bila tanggal belum diisi (diharapkan)',
-  cd.exists && cd.hidden === true, `hidden=${cd.hidden}`);
-
 /* Naskah benar-benar tampil, bukan hanya kerangka HTML */
 const copy = await page.evaluate(() => ({
   sections: document.querySelectorAll('main section').length,
+  sectionIds: Array.from(document.querySelectorAll('main section[id]')).map(s => s.id),
+  stanzas: document.querySelectorAll('.lyric__stanza').length,
   textLen: document.querySelector('main').innerText.trim().length,
   lang: document.documentElement.lang,
   title: document.title
 }));
-check('naskah tampil utuh (5 section, teks panjang)', copy.sections === 5 && copy.textLen > 800,
-  `${copy.sections} section, ${copy.textLen} karakter`);
-check('lang & title benar', copy.lang === 'id-ID' && copy.title.length > 0 && copy.title.length <= 60,
+check('naskah tampil utuh (3 section: kartu, lirik, pesan)',
+  copy.sections === 3 && copy.sectionIds.join(',') === 'kartu,lirik,pesan',
+  `${copy.sections} section: ${copy.sectionIds.join(', ')}`);
+check('lirik tampil lengkap live', copy.stanzas === 8, `${copy.stanzas} stanza`);
+check('teks utama cukup panjang', copy.textLen > 500, `${copy.textLen} karakter`);
+check('lang & title benar', copy.lang === 'id-ID' && copy.title.length > 0 && copy.title.length <= 70,
   `lang=${copy.lang} title="${copy.title}" (${copy.title.length} karakter)`);
 
 /* og:image harus ABSOLUT agar social card bisa di-render, dan harus
